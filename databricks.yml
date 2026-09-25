@@ -1,0 +1,31 @@
+# Databricks Asset Bundle for the NIP<->VPP Copilot build.
+# Holds every deployable resource for the project: the Lakeflow pipeline (now),
+# and the ML training job + serving later. One bundle, one deploy story.
+bundle:
+  name: nip-vpp-copilot
+
+variables:
+  catalog:
+    description: Catalog hosting the nip_vpp_* schemas.
+    default: wks_brabo_demo_catalog
+
+resources:
+  pipelines:
+    nip_vpp_pipeline:
+      name: nip_vpp_medallion
+      serverless: true
+      catalog: ${var.catalog}
+      schema: nip_vpp_bronze
+      photon: true
+      libraries:
+        - glob:
+            include: 02_lakeflow_pipeline/transformations/**
+      configuration:
+        pipeline.name: nip_vpp_medallion
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      profile: fevm-wks-brabo-demo

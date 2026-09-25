@@ -211,20 +211,21 @@ def main():
 
     for p in (RAW, PREVIEW):
         p.mkdir(parents=True, exist_ok=True)
-    (RAW / "manifestacoes").mkdir(exist_ok=True)
-    (RAW / "procedimentos_solicitados").mkdir(exist_ok=True)
-    (RAW / "interacoes_callcenter").mkdir(exist_ok=True)
-    (RAW / "ground_truth").mkdir(exist_ok=True)
+    # Each source gets its OWN subfolder so Auto Loader (read_files in streaming
+    # mode) can consume a directory, not a single file.
+    for sub in ("manifestacoes", "procedimentos_solicitados", "interacoes_callcenter",
+                "ground_truth", "dim_plano", "dim_beneficiario", "ref_rol_ans"):
+        (RAW / sub).mkdir(exist_ok=True)
 
     # ---- dim_plano ----
-    with open(RAW / "dim_plano.csv", "w", newline="") as f:
+    with open(RAW / "dim_plano" / "dim_plano.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["plano_id", "nome_plano", "segmentacao", "abrangencia", "coparticipacao"])
         for p in PLANOS:
             w.writerow(list(p))
 
     # ---- ref_rol_ans ----
-    with open(RAW / "ref_rol_ans.csv", "w", newline="") as f:
+    with open(RAW / "ref_rol_ans" / "ref_rol_ans.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["codigo_tuss", "nome_procedimento", "categoria", "tipo_item",
                     "segmentacao_cobertura", "obrigatorio_rol", "dut_texto"])
@@ -233,7 +234,7 @@ def main():
 
     # ---- beneficiaries ----
     beneficiarios = []
-    with open(RAW / "dim_beneficiario.csv", "w", newline="") as f:
+    with open(RAW / "dim_beneficiario" / "dim_beneficiario.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["beneficiario_id", "nome", "cpf", "data_nascimento", "plano_id",
                     "data_adesao", "uf", "email"])
