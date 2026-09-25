@@ -1,0 +1,4 @@
+FE Bar FAQ - answers to common questions live at go/fe-bar-faq.
+Your manager - they have visibility into your progress and can unblock time, resources, and access.
+#fe-specialization - for all questions.
+fe-tech-enablement@databricks.com - any private questions you may have.

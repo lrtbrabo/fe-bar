@@ -1,0 +1,13 @@
+Part 2: The AI Demo Roleplay
+The roleplay is where you present your solution out loud, the way you would to a customer, and defend the value story in real time. It is scored as part of the Customer Skills domain. Plan for roughly 20-30 minutes per attempt.
+
+How it works. Go to the Submission - AI role-play tab to launch the role-play session. You present to two AI personas for the industry you chose: a business stakeholder (the executive who funds the decision) and a technical stakeholder (the architect or data lead who has to live with what you built). Both are in the room for a single session. You walk through your solution once, make the value case, and answer questions and objections from each of them. The session is scored automatically and feeds into your Customer Skills score.
+
+What it's scored on:
+
+Demo setup: you frame the customer, the problem, and what you are about to show before diving in.
+Tell-show-tell structure: you say what you will demo, show it, then land what it means for the business.
+Value communication: you speak to business outcomes and the buyer's KPIs at an executive altitude, not a feature tour.
+Reading the room: you pitch each answer at the right altitude for whoever asked it, giving the technical stakeholder real detail without losing the business stakeholder.
+Professionalism: clear, confident delivery, including how you handle objections and pushback.
+Tips. Rehearse with your deck open, lead with the outcome, and keep the demo tight. Prepare for both kinds of pushback: cost, risk, and time to value from the business stakeholder, and architecture, data quality, security, and integration from the technical stakeholder. Expect to switch altitude mid-answer. You can retake the roleplay with any resubmission.

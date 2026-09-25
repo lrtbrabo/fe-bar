@@ -1,0 +1,3 @@
+Build solves an internal problem, not a customer problem.
+Layers are present but not connected.
+Narrative skips business value and dives straight into architecture.

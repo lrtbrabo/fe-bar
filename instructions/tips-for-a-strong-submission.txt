@@ -1,0 +1,7 @@
+Pick a real customer scenario. Anchor your build to a specific industry and a specific problem. Generic builds score low.
+Lead with the outcome. The first thing the evaluator reads should explain what business problem you solved and what value it creates. Save the architecture for later.
+Show the journey, integrated. Disconnected demos stitched together is the most common failure mode. Make the data flow obvious: raw data (synthetic or publicly available) through Lakeflow to Unity Catalog to Lakebase, made intelligent with ML or Gen AI and queryable through a Genie Agent, surfaced in a business app.
+Document trade-offs. Why this approach and not another? A short "decisions and trade-offs" section signals expertise.
+Quantify the value. "Saves $2M annually" beats "improves efficiency." Put a number on it, even if estimated.
+Use AI as a force multiplier. Document the tools, prompts, and patterns you used. The FE Bar rewards builders who treat AI as a teammate.
+Rehearse the roleplay. A strong build with a weak live demo still loses Customer Skills points. Practice your tell-show-tell out loud, keep it tight, and be ready to handle objections from both AI personas, the business stakeholder and the technical one.

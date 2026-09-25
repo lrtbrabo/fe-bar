@@ -1,0 +1,6 @@
+How to submit
+The FE Bar has two independent submission steps on two separate tabs. Complete both - in either order - to finish the bar.
+
+Submission - Build tab: upload your build artifacts and narrative, check the attestation, and submit. The evaluator returns a score and detailed per-domain feedback within a few minutes.
+Submission - AI role-play tab: launch the Yoodli role-play and deliver your demo to the two AI personas (business and technical stakeholder). The session is scored automatically when it finishes.
+Both steps are required. Either can be done first; they are independent of each other.

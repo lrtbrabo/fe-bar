@@ -1,0 +1,24 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Synthetic data bulk output (regenerable via generator; only preview/summary is committed)
+01_synthetic_data/output/raw/
+
+# Node / AppKit
+node_modules/
+dist/
+.next/
+build/
+
+# OS / editor
+.DS_Store
+*.log
+.env
+.databricks/
+
+# Secrets
+*.pem
+secrets.json

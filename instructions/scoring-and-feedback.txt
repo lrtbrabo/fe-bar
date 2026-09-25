@@ -1,0 +1,4 @@
+Scoring and feedback
+Final score will either be: did not pass, pass, or strongly passed. There is a score for each of the rubric areas as well as a final rating that aggregates these four scores.
+Feedback is provided for each build.
+Unlimited resubmissions, no waiting period. Read the feedback, close the gap, resubmit.

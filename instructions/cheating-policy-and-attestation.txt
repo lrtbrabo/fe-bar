@@ -1,0 +1,21 @@
+Cheating policy and attestation
+The FE Bar is designed for learning, not gaming. Clear rules apply, and you'll check off an attestation at submission.
+
+What counts as cheating
+Submitting someone else's code or build as your own
+Submitting a build generated from go/solution-builder (it must be your own build, not a Solution Builder demo)
+Sharing a full solution with another FE
+Reusing another FE's prior submission
+Using a hidden human proxy to do the work
+Running the build for another person
+Creating a skill that bypasses the assessment
+Before scoring, you must complete an attestation confirming that the submission is your own work and you understand the consequences of misrepresentation.
+
+The submission is your own work
+The submission was not generated from go/solution-builder
+You understand the consequences for misrepresentation
+Consequences
+Attestation violations or confirmed cheating can result in automatic failure and a notification to your leadership chain.
+
+What's fair game
+Using AI tools (LLMs, code assistants, prompt libraries) is encouraged - that's the point. Drawing on the prompt and pattern libraries is also fair. The line is whether the work, decisions, and narrative are yours.

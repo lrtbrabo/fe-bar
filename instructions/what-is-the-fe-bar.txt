@@ -1,0 +1,13 @@
+What is the FE Bar?
+The FE Bar serves as a skill validation checkpoint, covering four critical areas: Product, Industry, Build + AI Mindset, and Customer Skills. You build a working AI prototype that solves a real customer problem, document your thinking, and submit. An AI evaluator scores your build against a rubric designed by FE Experts and returns detailed feedback within minutes. As well, an AI roleplay assesses your ability to demo what you built to a customer, to both a business and a technical stakeholder.
+
+In addition to being a validating tool, the FE Bar is a learning tool, not a one-time exam. Submit as many times as you need. Every attempt teaches you something.
+
+Why we're rolling this out
+FE-Centric. Replaces generic certifications with validation mapped to actual FE work.
+Flexible learning. Multiple paths to demonstrate a skill instead of one mandatory route. Your prep adapts to what you already know and where you want to grow.
+Faster feedback loops. Personalized feedback within minutes of every submission, so you always know exactly where you stand and what to work on next.
+What's evaluated
+Four domains: Product, Industry, Build + AI Mindset, and Customer Skills. Each domain is rated Below, Meets, or Exceeds.
+
+A final rating of Did not pass, Pass, or Strongly passed, which takes into account the ratings across these areas, is given upon submission.
