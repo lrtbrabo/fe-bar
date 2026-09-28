@@ -95,9 +95,9 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 | `02_lakeflow_pipeline/` | Lakeflow SDP (bronze→silver→gold) SQL transformations. |
 | `03_unity_catalog/` | Catalog/schema/volume setup + governance (masking, row filters, tags, grants). |
 | `04_intelligence/` | NIP→VPP agent (tool-using) + parecer drafting + NIP-propensity ML model. |
-| `05_lakebase/` | Lakebase operational serving + synced tables. |
-| `06_genie/` | Genie Space definition for analyst NL queries. |
-| `07_app/` | Databricks App (AppKit / React) — the analyst copilot. |
+| `05_lakebase/` | Lakebase operational serving (Postgres reverse-ETL loader + analyst write-back). |
+| `06_genie/` | Genie Space definition + NL query harness for analysts. |
+| `07_app/nip-vpp-copilot/` | Databricks App (AppKit / React) — the analyst copilot. |
 | `evidence/` | **Execution evidence as text** — run outputs, row counts, model metrics, matcher accuracy. |
 | `deck/` | Business presentation (PDF). |
 
@@ -118,17 +118,37 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 
 ---
 
+## Live artifacts (deployed on `wks-demo-brabo`, catalog `wks_demo_brabo_catalog`)
+
+| Layer | Artifact | Proof |
+|---|---|---|
+| Lakeflow | pipeline `nip_vpp_medallion` (18 flows) | [evidence/02](evidence/02_lakeflow_run.md) |
+| Unity Catalog | masking + tags on `nip_vpp_silver`/`_gold` | [evidence/03](evidence/03_governance.md) |
+| Gen AI | NIP→VPP matcher — **96.6%** on 208 NIPs | [evidence/04](evidence/04_matcher_eval.md) |
+| ML | propensity model — ROC-AUC **0.926**, served at `nip-propensity` | [evidence/05](evidence/05_ml_propensity.md) |
+| Lakebase | Postgres `nip_vpp.nip_serving` + `analyst_feedback` | [evidence/07](evidence/07_lakebase.md) |
+| Genie | space `NIP VPP Copilot` | [evidence/06](evidence/06_genie.md) |
+| App | `nip-vpp-copilot` (RUNNING) | [evidence/08](evidence/08_app.md) |
+
+Business deck: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf).
+
 ## Reproduce it
 
 ```bash
+# 0) auth: a Databricks CLI profile (this build used `wks-demo-brabo`)
 # 1) synthetic data
 python3 -m venv .venv && source .venv/bin/activate && pip install faker pandas pyarrow
 python 01_synthetic_data/generator/generate.py
 
-# 2) Unity Catalog schemas + landing volume, then upload raw data
-databricks ... (see 03_unity_catalog/00_setup_catalog.sql)
-
-# 3..7) Lakeflow pipeline, agent, ML model, Lakebase, Genie, App — see each numbered folder.
+# 2) Unity Catalog schemas + landing volume (03_unity_catalog/00_setup_catalog.sql),
+#    then upload 01_synthetic_data/output/raw/ to the landing Volume.
+# 3) Lakeflow:   databricks bundle deploy && databricks bundle run nip_vpp_pipeline
+# 4) Governance: run 03_unity_catalog/01_governance.sql
+# 5) Gen AI:     python 04_intelligence/agent/evaluate.py  &&  publish_matches.py
+# 6) ML:         python 04_intelligence/ml_propensity/train_propensity.py
+# 7) Lakebase:   python 05_lakebase/load_lakebase.py
+# 8) Genie:      databricks genie create-space (see 06_genie/space.json) ; python 06_genie/ask.py
+# 9) App:        cd 07_app/nip-vpp-copilot && databricks apps deploy
 ```
 
 ---
