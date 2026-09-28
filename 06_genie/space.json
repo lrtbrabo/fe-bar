@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "config": {
+    "sample_questions": [
+      "Quantas NIPs estão vencidas versus dentro do prazo?",
+      "Quais NIPs estão em estado crítico, a 1 dia do prazo?",
+      "Qual a taxa de matches automáticos (auto_resolvavel) das NIPs?",
+      "Quantas NIPs por status de SLA e por plano?",
+      "Quais beneficiários têm mais interações no call center com sentimento médio negativo?"
+    ]
+  },
+  "data_sources": {
+    "tables": [
+      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_queue" },
+      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_vpp_matches" },
+      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_vpp_candidatas" },
+      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_beneficiario_360" }
+    ]
+  }
+}
