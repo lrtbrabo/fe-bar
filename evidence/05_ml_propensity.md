@@ -38,3 +38,13 @@ actual_abriu_NIP       12       40
 | n_interacoes_negativas | 0.0004 |
 | avg_duracao_seg | -0.0040 |
 | dias_desde_ultima | -0.0062 |
+
+## Deployed to Model Serving
+Registered model deployed to serving endpoint **`nip-propensity`** (scale-to-zero). Live test via
+`/serving-endpoints/nip-propensity/invocations`:
+```
+input  (high-risk): 5 interactions, avg_sentimento -0.6, 4 negatives, 3 protocols  -> prediction 1 (will open NIP)
+input  (low-risk):  1 interaction,  avg_sentimento +0.5, 0 negatives, 0 protocols  -> prediction 0
+output: {"predictions": [1, 0]}
+```
+The operation can score beneficiaries in real time and intervene at the call center before a NIP is filed.
