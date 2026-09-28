@@ -9,26 +9,26 @@ All data is synthetic. No real customer data.
 | dim_plano | 5 |
 | dim_beneficiario | 1500 |
 | ref_rol_ans | 26 |
-| manifestacoes (total) | 2585 |
-| &nbsp;&nbsp;• VPP (pai) | 1478 |
-| &nbsp;&nbsp;• VPP_FILHA | 899 |
+| manifestacoes (total) | 2573 |
+| &nbsp;&nbsp;• VPP (pai) | 1471 |
+| &nbsp;&nbsp;• VPP_FILHA | 894 |
 | &nbsp;&nbsp;• NIP | 208 |
-| procedimentos_solicitados | 6214 |
-| interacoes_callcenter | 1828 |
+| procedimentos_solicitados | 6176 |
+| interacoes_callcenter | 1820 |
 | ground_truth (NIP labels) | 208 |
 
 ## Planted hard cases (this is what makes matching non-trivial)
 | Case | Count | Why it matters |
 |---|---|---|
-| NIP → correct answer is the CHILD (pai/filha rule) | 59 | material/medicamento/OPME complaints must resolve to VPP_FILHA, not the parent guide |
-| NIP → correct answer is the PARENT guide | 149 | procedure complaints resolve to the VPP pai |
-| Resolved NIPs (status trap) | 80 | denied line items flipped to APROVADO + parecer filled → naive status matching fails |
-| NIPs with multi-VPP ambiguity | 40 | beneficiary has ≥2 VPPs with overlapping procedures → needs tie-break |
-| NIPs with an out-of-65-day-window distractor VPP | 56 | old guide must be excluded by the 65-day rule |
+| NIP → correct answer is the CHILD (pai/filha rule) | 61 | material/medicamento/OPME complaints must resolve to VPP_FILHA, not the parent guide |
+| NIP → correct answer is the PARENT guide | 147 | procedure complaints resolve to the VPP pai |
+| Resolved NIPs (status trap) | 88 | denied line items flipped to APROVADO + parecer filled → naive status matching fails |
+| NIPs with multi-VPP ambiguity | 32 | beneficiary has ≥2 VPPs with overlapping procedures → needs tie-break |
+| NIPs with an out-of-65-day-window distractor VPP | 14 | old guide must be excluded by the 65-day rule |
 
 ## Call-center / ML signal
 - Beneficiaries who opened a NIP: 208
-- Call-center interactions from NIP-openers: 486 of 1828 (26.6%)
+- Call-center interactions from NIP-openers: 503 of 1820 (27.6%)
 - NIP-openers have more interactions and more negative sentiment (learnable propensity signal).
 
 ## Source formats (for Lakeflow ingestion variety)

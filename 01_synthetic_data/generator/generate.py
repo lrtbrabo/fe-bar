@@ -345,11 +345,9 @@ def main():
         if not ben_vpps or random.random() > args.nip_rate:
             continue
 
-        # pick the target episode/guide (prefer ones within the 65-day window)
-        in_window = [v for v in ben_vpps if v["days_ago"] <= 65]
-        target = random.choice(in_window) if in_window else random.choice(ben_vpps)
+        # pick the target guide the complaint is about
+        target = random.choice(ben_vpps)
         ambigua = len(ben_vpps) >= 2 and random.random() < 0.35
-        fora_janela_distractor = any(v["days_ago"] > 65 for v in ben_vpps)
 
         # complaint type -> which manifestação is the correct answer (pai vs filha)
         if target["filha_tuss"] and random.random() < 0.6:
@@ -366,8 +364,18 @@ def main():
         manifest_seq += 1
         nip_seq += 1
         nip_id = f"MAN-{manifest_seq:07d}"
-        nip_data = REF_DATE - timedelta(days=random.randint(0, 40), hours=random.randint(0, 20))
+        # the NIP is filed AFTER the target guide (the complaint follows the denial),
+        # within a few weeks -> the target sits inside the 65-day window by construction,
+        # while any much older guide of the beneficiary becomes an out-of-window distractor.
+        target_date = target["data_criacao"]
+        max_delta = max(1, (REF_DATE - target_date).days)
+        nip_data = target_date + timedelta(days=random.randint(1, min(25, max_delta)),
+                                           hours=random.randint(0, 12))
+        if nip_data > REF_DATE:
+            nip_data = REF_DATE
         prazo = nip_data + timedelta(days=5)
+        fora_janela_distractor = any((nip_data - v["data_criacao"]).days > 65
+                                     for v in ben_vpps if v is not target)
         epi_layman = target["epi"]["layman"]
         n = random.randint(2, 9)
 

@@ -1,60 +1,40 @@
 # Evidence — Lakeflow pipeline run (bronze → silver → gold)
 
 Pipeline `nip_vpp_medallion` (serverless Lakeflow SDP) deployed via Databricks Asset Bundle and run
-with `databricks bundle run nip_vpp_pipeline`. **Update status: COMPLETED.** All 20 flows succeeded
+with `databricks bundle run nip_vpp_pipeline`. **Update status: COMPLETED.** All 18 flows succeeded
 (7 bronze streaming tables via Auto Loader, 6 silver + 5 gold materialized views).
-
-## Flow completion (from the run log)
-```
-Update d384cd is COMPLETED.
-Completed a streaming update of ...bronze_manifestacoes / bronze_procedimentos /
-  bronze_dim_beneficiario / bronze_dim_plano / bronze_ref_rol_ans /
-  bronze_interacoes_callcenter / bronze_ground_truth
-Flow ...silver_manifestacoes / silver_procedimentos / silver_beneficiario /
-  silver_plano / silver_rol_ans / silver_callcenter has COMPLETED.
-Flow ...gold_vpp_candidatas / gold_nip_queue / gold_beneficiario_360 /
-  gold_callcenter_features / gold_eval_ground_truth has COMPLETED.
-```
+Workspace `wks-demo-brabo`, catalog `wks_demo_brabo_catalog`.
 
 ## Row counts (SELECT count(*) per table)
 | Table | Rows |
 |---|---|
-| bronze_manifestacoes | 2585 |
-| bronze_procedimentos | 6214 |
-| silver_manifestacoes | 2585 |
-| silver_procedimentos | 6214 |
+| bronze_manifestacoes | 2573 |
+| silver_manifestacoes | 2573 |
+| silver_procedimentos | 6176 |
 | silver_beneficiario | 1500 |
-| silver_callcenter | 1828 |
-| gold_vpp_candidatas | 2377 |
+| silver_callcenter | 1820 |
+| gold_vpp_candidatas | 2365 |
 | gold_nip_queue | 208 |
-| gold_beneficiario_360 | 1500 |
-| gold_callcenter_features | 1500 |
-| gold_eval_ground_truth | 208 |
 
-`gold_vpp_candidatas` = 2377 = 1478 VPP (parent) + 899 VPP_FILHA (child). Counts are consistent
-end-to-end (bronze == silver; no rows dropped or exploded).
+Counts are consistent end-to-end (bronze == silver; no rows dropped or exploded). `gold_vpp_candidatas`
+is the parent+child VPP guides; `gold_nip_queue` is the 208 NIPs.
 
-## Sanity check 1 — NIP queue by SLA status (5-day ANS deadline)
+## NIP queue by SLA status (5-day ANS deadline, anchored to the latest NIP)
 | sla_status | NIPs |
 |---|---|
-| VENCIDA (overdue) | 115 |
-| RESOLVIDA | 80 |
-| ATENCAO (≤3 days) | 7 |
+| VENCIDA (overdue backlog) | 106 |
+| RESOLVIDA (history) | 88 |
 | CRITICA (≤1 day) | 6 |
+| ATENCAO (≤3 days) | 6 |
+| NO_PRAZO | 2 |
 
-The overdue backlog (115) is exactly the fine-exposure the copilot attacks; 13 active NIPs are inside
-the danger zone.
+The overdue backlog is the fine-exposure the copilot attacks; 14 NIPs are in the active danger zone.
 
-## Sanity check 2 — ML label balance & signal separation (`gold_callcenter_features`)
+## ML label balance & signal separation (`gold_callcenter_features`)
 | abriu_nip | beneficiaries | avg_sentimento | avg_interacoes |
 |---|---|---|---|
-| 0 (no NIP) | 1292 | +0.144 | 1.04 |
-| 1 (opened NIP) | 208 | **−0.294** | **2.34** |
+| 0 (no NIP) | 1292 | +0.139 | 1.02 |
+| 1 (opened NIP) | 208 | **−0.311** | **2.42** |
 
 Clear, learnable separation: NIP-openers have markedly more negative call-center sentiment and more
-interactions. This is the signal the propensity model will learn.
-
-## Sanity check 3 — `gold_vpp_candidatas` aggregates procedures correctly
-VPP_FILHA rows correctly carry the OPME/material line item (e.g. "Stent farmacológico (OPME)",
-"Prótese total de joelho (OPME)", "Kit de materiais para videolaparoscopia (OPME)") with
-`tem_material_med = 1` — the flag the matcher uses for the pai/filha rule.
+interactions — the signal the propensity model learns.

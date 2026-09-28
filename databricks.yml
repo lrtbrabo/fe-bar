@@ -7,7 +7,7 @@ bundle:
 variables:
   catalog:
     description: Catalog hosting the nip_vpp_* schemas.
-    default: wks_brabo_demo_catalog
+    default: wks_demo_brabo_catalog
 
 resources:
   pipelines:
@@ -28,4 +28,4 @@ targets:
     mode: development
     default: true
     workspace:
-      profile: fevm-wks-brabo-demo
+      profile: wks-demo-brabo
