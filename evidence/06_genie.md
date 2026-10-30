@@ -103,7 +103,7 @@ BEN-000413 | Sra. N. | MA | Saúde Total Nacional | 5 | -0.524
 The space now carries domain instructions (glossary, SLA meaning, business-language answers, the R$ 30 mil
 premise), five sample questions and three certified example SQLs (`06_genie/build_space.py` →
 `06_genie/space.json`). It is embedded in the app via the AppKit `genie()` plugin with the
-`dashboards.genie` user scope, so each question runs with the asker's Unity Catalog permissions.
+`genie` + `dashboards.genie` user scopes, so each question runs with the asker's Unity Catalog permissions.
 
 Asked through the app's own route (`POST /api/genie/default/messages`):
 

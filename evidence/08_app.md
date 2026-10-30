@@ -4,7 +4,7 @@ App **`nip-vpp-copilot`** (AppKit 0.57, TypeScript/React + Express) deployed to 
 **Status: RUNNING / compute ACTIVE.** URL: `https://nip-vpp-copilot-7474652430122624.aws.databricksapps.com`
 
 App resources (from `databricks apps get`): `postgres` (Lakebase project `nip-vpp`, CAN_CONNECT_AND_CREATE)
-and `genie-space` (CAN_RUN). User API scope: `dashboards.genie`, so the embedded agent runs **on behalf
+and `genie-space` (CAN_RUN). User API scopes: `genie` + `dashboards.genie`, so the embedded agent runs **on behalf
 of the signed-in user** and Unity Catalog masking applies to its answers.
 
 ## Screens

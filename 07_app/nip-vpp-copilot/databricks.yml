@@ -26,6 +26,7 @@ resources:
       # The agent (Genie) runs on behalf of the signed-in user, so UC masking applies to its answers.
       user_api_scopes:
         - dashboards.genie
+        - genie
 
       # The resources which this app has access to.
       resources:

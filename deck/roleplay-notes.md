@@ -100,7 +100,7 @@ A história tem um arco simples, uma tela por ato:
 | Como vocês tratam pai/filha, a janela e os casos resolvidos? | Busca determinística (beneficiário + 65 dias) e o LLM aplica as regras ao ranquear. A tela de *Guias avaliadas* mostra o motivo de cada descarte. Avaliado por tipo de caso difícil (evidence/04). |
 | De onde vem o dado e quem governa? | Lakeflow (Auto Loader) → Unity Catalog bronze/silver/gold, com masking de CPF/nome/email e tags de classificação. Linhagem automática. |
 | Por que Lakebase? | A fila precisa de leitura rápida e o app grava decisões (OLTP). O gold é copiado para Postgres no Lakebase; o app escreve parecer e ações de retenção de volta. |
-| O agente vê dado que o usuário não pode ver? | Não: o Genie roda **em nome do usuário** (escopo `dashboards.genie`), então vale o masking do Unity Catalog. |
+| O agente vê dado que o usuário não pode ver? | Não: o Genie roda **em nome do usuário** (escopos `genie` e `dashboards.genie`), então vale o masking do Unity Catalog. |
 | Integra com Salesforce? | Os analistas vivem no Salesforce: o conector nativo e bidirecional do Databricks leva o parecer de volta para lá. É o próximo passo do roadmap. |
 | Por que não ficar na POC em BigQuery? | O bloqueio era liberar a ferramenta para a área de negócio. Aqui o app e o Genie/Databricks One entregam isso sem expor a complexidade da plataforma. |
 
