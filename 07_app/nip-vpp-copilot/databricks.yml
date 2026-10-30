@@ -6,6 +6,10 @@ variables:
     description: Full Lakebase Postgres branch resource name. Obtain by running `databricks postgres list-branches {project-name}`, select the desired item from the output array and use its .name value. Requires the project resource name.
   postgres_database:
     description: Full Lakebase Postgres database resource name. Obtain by running `databricks postgres list-databases {branch-name}`, select the desired item from the output array and use its .name value. Requires the branch resource name.
+  genie_space_id:
+    description: Genie space ID of the NIP agent (06_genie/.space_id).
+  genie_space_name:
+    description: Genie space display name.
   postgres_project:
     description: Full Lakebase Postgres project resource name. Obtain by running `databricks postgres list-projects`, select the desired item from the output array and use its .name value.
 
@@ -13,15 +17,15 @@ resources:
   apps:
     app:
       name: "nip-vpp-copilot"
-      description: "Copiloto do analista para NIPs: fila, VPP inferida, parecer sugerido e feedback."
+      description: "Centro de comando de NIPs: painel, fila com VPP inferida, radar de prevencao e agente Genie."
       source_code_path: ./
 
       # Start the app automatically on deploy.
       lifecycle:
         started: true
-      # Uncomment to enable on behalf of user API scopes. Available scopes: sql, dashboards.genie, files.files, serving.serving-endpoints
-      # user_api_scopes:
-      #   - sql
+      # The agent (Genie) runs on behalf of the signed-in user, so UC masking applies to its answers.
+      user_api_scopes:
+        - dashboards.genie
 
       # The resources which this app has access to.
       resources:
@@ -30,6 +34,11 @@ resources:
             branch: ${var.postgres_branch}
             database: ${var.postgres_database}
             permission: CAN_CONNECT_AND_CREATE
+        - name: genie-space
+          genie_space:
+            name: ${var.genie_space_name}
+            space_id: ${var.genie_space_id}
+            permission: CAN_RUN
 
 targets:
   default:
@@ -41,3 +50,5 @@ targets:
       postgres_branch: projects/nip-vpp/branches/production
       postgres_database: projects/nip-vpp/branches/production/databases/databricks-postgres
       postgres_project: projects/nip-vpp
+      genie_space_id: 01f1bb5ef4bf1eed83d9e601c7c66319
+      genie_space_name: Agente NIP · NIP VPP Copilot

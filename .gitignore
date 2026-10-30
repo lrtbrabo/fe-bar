@@ -22,3 +22,6 @@ build/
 # Secrets
 *.pem
 secrets.json
+
+# Local MLflow tracking store (created by batch scoring)
+mlflow.db

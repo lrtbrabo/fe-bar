@@ -2,19 +2,136 @@
   "version": 2,
   "config": {
     "sample_questions": [
-      "Quantas NIPs estão vencidas versus dentro do prazo?",
-      "Quais NIPs estão em estado crítico, a 1 dia do prazo?",
-      "Qual a taxa de matches automáticos (auto_resolvavel) das NIPs?",
-      "Quantas NIPs por status de SLA e por plano?",
-      "Quais beneficiários têm mais interações no call center com sentimento médio negativo?"
+      {
+        "id": "7c0ae06e9a640b4e01c79fcbc123b949",
+        "question": [
+          "Quantos beneficiários estão em risco alto de abrir NIP e por quê?"
+        ]
+      },
+      {
+        "id": "9258e96679491f09e444f8be571d2ad7",
+        "question": [
+          "Qual a exposição a multa das NIPs vencidas, por tema?"
+        ]
+      },
+      {
+        "id": "c1894f968b30561f00aba812a66096b5",
+        "question": [
+          "Quais NIPs vencem em até 1 dia e qual o tema de cada uma?"
+        ]
+      },
+      {
+        "id": "c6fef3796cb5c27fca4adc3644df08ce",
+        "question": [
+          "Quantas NIPs abertas têm itens fora da segmentação do plano?"
+        ]
+      },
+      {
+        "id": "d146d5ac5d72814338296e4a2023c9f9",
+        "question": [
+          "Quais temas concentram mais NIPs em aberto?"
+        ]
+      }
     ]
   },
   "data_sources": {
     "tables": [
-      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_queue" },
-      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_vpp_matches" },
-      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_vpp_candidatas" },
-      { "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_beneficiario_360" }
+      {
+        "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_beneficiario_360"
+      },
+      {
+        "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_rol_check"
+      },
+      {
+        "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_serving"
+      },
+      {
+        "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_propensity_scores"
+      },
+      {
+        "identifier": "wks_demo_brabo_catalog.nip_vpp_gold.gold_vpp_candidatas"
+      }
+    ]
+  },
+  "instructions": {
+    "text_instructions": [
+      {
+        "id": "66a310b25af33cfca7642218135157ff",
+        "content": [
+          "# Agente NIP — instruções\n",
+          "\n",
+          "Você apoia a coordenação de NIPs de uma operadora de saúde suplementar. Responda sempre em português do Brasil, de forma curta e direta, citando números.\n",
+          "\n",
+          "## Como responder\n",
+          "- Fale a língua do negócio: não cite nomes de colunas nem valores técnicos (true/false, códigos como CRITICA ou VENCIDA). Diga \"vence em até 1 dia\", \"vencida\", \"em aberto\", \"resolvida\".\n",
+          "- Datas em dd/mm/aaaa, sem horário. Valores em reais no formato R$ 570 mil.\n",
+          "- Termine com uma recomendação prática quando fizer sentido (ex.: \"priorize as 6 que vencem hoje\").\n",
+          "- Ao explicar o risco do radar, agrupe os motivos em 2 ou 3 padrões com contagem (ex.: \"5 com protocolos abertos, 4 com sentimento negativo\"), em vez de listar beneficiário por beneficiário.\n",
+          "\n",
+          "## Glossário\n",
+          "- NIP (Notificação de Intermediação Preliminar): reclamação do beneficiário registrada na ANS. A operadora tem 5 dias para responder; fora do prazo há risco de multa.\n",
+          "- VPP (Validação de Procedimento Prévio): guia de autorização prévia com os procedimentos solicitados. Cada NIP é associada a uma VPP pelo agente (coluna matched_manifestacao_id).\n",
+          "- Guia pai (tipo VPP) x item filho (tipo VPP_FILHA): reclamação sobre procedimento usa a guia pai; reclamação sobre material, medicamento ou OPME usa o item filho.\n",
+          "- tema: o tratamento ou cirurgia da guia associada (ex.: \"colocação de stent no coração\").\n",
+          "\n",
+          "## Tabelas\n",
+          "- gold_nip_serving: uma linha por NIP. Use para fila, prazo, tema, confiança, parecer sugerido e justificativa.\n",
+          "  - sla_status: VENCIDA (passou do prazo), CRITICA (vence em até 1 dia), ATENCAO (até 3 dias), NO_PRAZO, RESOLVIDA.\n",
+          "  - \"NIP aberta\" ou \"em aberto\" = resolvida = false.\n",
+          "  - auto_resolvavel = true quando a confiança do agente é >= 0,8.\n",
+          "- gold_nip_rol_check: itens da guia associada a cada NIP comparados com o rol da ANS (no_rol) e com a segmentação do plano (segmentacao_cobre).\n",
+          "- gold_propensity_scores: chance de cada beneficiário abrir uma NIP (score de 0 a 1, faixa_risco ALTO >= 0,7, MEDIO >= 0,4). \"Radar\" ou \"em risco\" = abriu_nip = 0 e faixa_risco em ('ALTO','MEDIO'). A coluna motivos explica o risco.\n",
+          "- gold_beneficiario_360 e gold_vpp_candidatas: contexto do beneficiário e das guias.\n",
+          "\n",
+          "## Regras\n",
+          "- Exposição a multa: use a premissa ilustrativa de R$ 30.000 por NIP vencida e aberta, e diga que é uma premissa.\n",
+          "- Tempo economizado: premissa de 17 minutos por NIP resolvida com o copiloto (25 min manual contra 8 min).\n",
+          "- Os nomes de beneficiários são mascarados pelo Unity Catalog; não tente revelá-los.\n",
+          "- Ao falar de uma NIP específica, traga reclamação resumida, tema, guia associada, confiança, justificativa e prazo.\n"
+        ]
+      }
+    ],
+    "example_question_sqls": [
+      {
+        "id": "2c6a89787f10ff702ceb8abacb7e02fe",
+        "question": [
+          "Exposição a multa das NIPs vencidas por tema"
+        ],
+        "sql": [
+          "SELECT coalesce(nullif(tema, ''), 'sem guia associada') AS tema,\n",
+          "       count(*) AS nips_vencidas,\n",
+          "       count(*) * 30000 AS exposicao_estimada_reais\n",
+          "FROM wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_serving\n",
+          "WHERE sla_status = 'VENCIDA' AND NOT resolvida\n",
+          "GROUP BY 1\n",
+          "ORDER BY nips_vencidas DESC\n"
+        ]
+      },
+      {
+        "id": "dc23e3fe228c545b5a194c3641528256",
+        "question": [
+          "Beneficiários em risco alto de abrir NIP"
+        ],
+        "sql": [
+          "SELECT beneficiario_id, nome, nome_plano, round(score, 2) AS score, motivos\n",
+          "FROM wks_demo_brabo_catalog.nip_vpp_gold.gold_propensity_scores\n",
+          "WHERE abriu_nip = 0 AND faixa_risco = 'ALTO'\n",
+          "ORDER BY score DESC\n"
+        ]
+      },
+      {
+        "id": "fa191cf81e34077e4d7199d4fc516eec",
+        "question": [
+          "NIPs abertas com item fora da segmentação do plano"
+        ],
+        "sql": [
+          "SELECT DISTINCT s.nip_id, s.tema, s.nome_plano, s.plano_segmentacao, r.descricao_procedimento\n",
+          "FROM wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_serving s\n",
+          "JOIN wks_demo_brabo_catalog.nip_vpp_gold.gold_nip_rol_check r ON r.nip_id = s.nip_id\n",
+          "WHERE NOT s.resolvida AND NOT r.segmentacao_cobre\n",
+          "ORDER BY s.nip_id\n"
+        ]
+      }
     ]
   }
 }

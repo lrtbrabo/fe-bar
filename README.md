@@ -97,7 +97,7 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 | `04_intelligence/` | NIP→VPP agent (tool-using) + parecer drafting + NIP-propensity ML model. |
 | `05_lakebase/` | Lakebase operational serving (Postgres reverse-ETL loader + analyst write-back). |
 | `06_genie/` | Genie Space definition + NL query harness for analysts. |
-| `07_app/nip-vpp-copilot/` | Databricks App (AppKit / React) — the analyst copilot. |
+| `07_app/nip-vpp-copilot/` | Databricks App (AppKit / React): the NIP command center (Painel, Fila, Radar, Agente). |
 | `evidence/` | **Execution evidence as text** — run outputs, row counts, model metrics, matcher accuracy. |
 | `deck/` | Business presentation (PDF). |
 
@@ -125,12 +125,22 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 | Lakeflow | pipeline `nip_vpp_medallion` (18 flows) | [evidence/02](evidence/02_lakeflow_run.md) |
 | Unity Catalog | masking + tags on `nip_vpp_silver`/`_gold` | [evidence/03](evidence/03_governance.md) |
 | Gen AI | NIP→VPP matcher — **96.6%** on 208 NIPs | [evidence/04](evidence/04_matcher_eval.md) |
-| ML | propensity model — ROC-AUC **0.926**, served at `nip-propensity` | [evidence/05](evidence/05_ml_propensity.md) |
-| Lakebase | Postgres `nip_vpp.nip_serving` + `analyst_feedback` | [evidence/07](evidence/07_lakebase.md) |
-| Genie | space `NIP VPP Copilot` | [evidence/06](evidence/06_genie.md) |
+| ML | propensity model — ROC-AUC **0.926**, served at `nip-propensity`, batch-scored for the Radar | [evidence/05](evidence/05_ml_propensity.md) |
+| Lakebase | Postgres `nip_vpp`: queue, guide explainability, rol check, timeline, radar + 2 write-back tables | [evidence/07](evidence/07_lakebase.md) |
+| Genie | space `Agente NIP`, with domain instructions; embedded in the app on behalf of the user | [evidence/06](evidence/06_genie.md) |
 | App | `nip-vpp-copilot` (RUNNING) | [evidence/08](evidence/08_app.md) |
 
-Business deck: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf).
+Business deck: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf) · Demo script: [`deck/roleplay-notes.md`](deck/roleplay-notes.md).
+
+## The app: a command center in four moves
+
+| Enxergar (see) | Perguntar (ask) | Resolver (resolve) | Prevenir (prevent) |
+|---|---|---|---|
+| **Painel**: open backlog by ANS deadline, fine exposure in R$ (editable premise), themes, next best actions | **Agente NIP**: Genie side panel on every screen, context-aware suggestions, runs as the user | **Fila**: inferred VPP with confidence, every discarded guide and why, ANS-rol + plan check, drafted parecer, approve (write-back) | **Radar**: beneficiaries likely to open a NIP, with drivers; the call center acts (write-back) |
+
+![Painel](deck/img/painel.png)
+![Fila](deck/img/fila.png)
+![Radar](deck/img/radar.png)
 
 ## Reproduce it
 
@@ -145,9 +155,9 @@ python 01_synthetic_data/generator/generate.py
 # 3) Lakeflow:   databricks bundle deploy && databricks bundle run nip_vpp_pipeline
 # 4) Governance: run 03_unity_catalog/01_governance.sql
 # 5) Gen AI:     python 04_intelligence/agent/evaluate.py  &&  publish_matches.py
-# 6) ML:         python 04_intelligence/ml_propensity/train_propensity.py
-# 7) Lakebase:   python 05_lakebase/load_lakebase.py
-# 8) Genie:      databricks genie create-space (see 06_genie/space.json) ; python 06_genie/ask.py
+# 6) ML:         python 04_intelligence/ml_propensity/train_propensity.py  &&  score_propensity.py
+# 7) Lakebase:   python 05_lakebase/load_lakebase.py   (builds serving tables, loads Postgres, grants the app SP)
+# 8) Genie:      python 06_genie/build_space.py   (instructions, sample questions, certified SQL)
 # 9) App:        cd 07_app/nip-vpp-copilot && databricks apps deploy
 ```
 

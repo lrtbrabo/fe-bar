@@ -1,10 +1,17 @@
 # Evidence — Lakebase operational serving (Postgres)
 
-Lakebase project `nip-vpp` (Autoscaling, scale-to-zero). Reverse-ETL loaded `gold_nip_serving` -> Postgres `nip_vpp.nip_serving`; the app reads the queue here (low-latency OLTP) and writes analyst decisions to `nip_vpp.analyst_feedback`.
+Lakebase project `nip-vpp` (Autoscaling, scale-to-zero). `05_lakebase/load_lakebase.py` builds the gold serving tables in Unity Catalog, reverse-ETLs them into Postgres schema `nip_vpp`, and re-grants the app's service principal. The app reads here (low-latency OLTP) and writes decisions back.
 
-**Loaded 208 NIPs** into `nip_vpp.nip_serving`. 208 are auto-resolvable (confidence >= 0.8).
+## Rows loaded (read-only serving tables)
+| Postgres table | Rows |
+|---|---|
+| `nip_vpp.nip_serving` | 208 |
+| `nip_vpp.nip_candidates` | 414 |
+| `nip_vpp.nip_rol_check` | 521 |
+| `nip_vpp.callcenter` | 1820 |
+| `nip_vpp.propensity` | 1500 |
 
-## Rows by SLA status (queried live from Lakebase Postgres)
+## NIP queue by SLA status (queried live from Lakebase)
 | sla_status | NIPs |
 |---|---|
 | VENCIDA | 106 |
@@ -13,6 +20,13 @@ Lakebase project `nip-vpp` (Autoscaling, scale-to-zero). Reverse-ETL loaded `gol
 | ATENCAO | 6 |
 | NO_PRAZO | 2 |
 
-## Tables
-- `nip_vpp.nip_serving` — PK `nip_id`, index on `(sla_status, dias_para_prazo)`.
-- `nip_vpp.analyst_feedback` — write-back of analyst decisions (APROVADO/AJUSTADO/REJEITADO).
+## Radar: beneficiaries without a NIP, by risk band
+| faixa_risco | beneficiaries |
+|---|---|
+| ALTO | 9 |
+| MEDIO | 58 |
+| BAIXO | 1225 |
+
+## Write-back tables (kept across loads)
+- `nip_vpp.analyst_feedback` — analyst decision per NIP (APROVADO / AJUSTADO / REJEITADO).
+- `nip_vpp.retention_actions` — proactive call-center action per at-risk beneficiary.

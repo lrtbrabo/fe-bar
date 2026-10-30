@@ -98,3 +98,36 @@ BEN-001008 | João G. | SE | Hospitalar Nacional Copart | 5 | -0.537
 BEN-000413 | Sra. N. | MA | Saúde Total Nacional | 5 | -0.524
 ```
 
+
+## The same space as the in-app "Agente NIP" (on behalf of the user)
+The space now carries domain instructions (glossary, SLA meaning, business-language answers, the R$ 30 mil
+premise), five sample questions and three certified example SQLs (`06_genie/build_space.py` →
+`06_genie/space.json`). It is embedded in the app via the AppKit `genie()` plugin with the
+`dashboards.genie` user scope, so each question runs with the asker's Unity Catalog permissions.
+
+Asked through the app's own route (`POST /api/genie/default/messages`):
+
+**Q: Qual a exposição a multa das NIPs vencidas, por tema?**
+```sql
+SELECT COALESCE(NULLIF(`tema`, ''), 'sem guia associada') AS `tema`, COUNT(*) AS `nips_vencidas`,
+       COUNT(*) * 30000 AS `exposicao_estimada_reais`
+FROM `wks_demo_brabo_catalog`.`nip_vpp_gold`.`gold_nip_serving`
+WHERE `sla_status` = 'VENCIDA' AND `resolvida` = false AND `tema` IS NOT NULL
+GROUP BY COALESCE(NULLIF(`tema`, ''), 'sem guia associada')
+ORDER BY `nips_vencidas` DESC
+```
+> Usando a premissa ilustrativa de R$ 30 mil por NIP vencida e aberta, a maior exposição está em colocação
+> de stent no coração com 19 NIPs e R$ 570 mil, seguida por tratamento de hemodiálise com 16 e R$ 480 mil,
+> e tratamento de quimioterapia com 15 e R$ 450 mil…
+
+**Q: Resuma a NIP MAN-0000093: reclamação, guia associada, justificativa e prazo.**
+> A NIP MAN-0000093 relata negativa de autorização para consulta com ortopedista, o que estaria atrasando
+> o tratamento de cirurgia bariátrica. A guia associada é VPP0000050 … o prazo da ANS é 24/09/2026 e a NIP
+> está em aberto com vencimento em até 1 dia.
+
+**Q: Quantos beneficiários estão em risco alto de abrir NIP e por quê?** (deployed app)
+> Há 9 beneficiários em risco alto de abrir NIP. Os motivos identificados foram: protocolos abertos,
+> contatos negativos e sentimento médio negativo no call center…
+
+The numbers match the app's Painel and Radar (19 overdue stent NIPs, 9 high-risk beneficiaries): the agent
+and the screens read the same governed gold tables.

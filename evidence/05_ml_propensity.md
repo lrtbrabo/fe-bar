@@ -48,3 +48,16 @@ input  (low-risk):  1 interaction,  avg_sentimento +0.5, 0 negatives, 0 protocol
 output: {"predictions": [1, 0]}
 ```
 The operation can score beneficiaries in real time and intervene at the call center before a NIP is filed.
+
+## Batch scoring for the Radar (`04_intelligence/ml_propensity/score_propensity.py`)
+All 1,500 beneficiaries scored with UC model version 3 (`predict_proba`), published to
+`gold_propensity_scores` with plain-language drivers, and reverse-ETL'd to Lakebase `nip_vpp.propensity`.
+```
+scored 1500 beneficiaries; without NIP: 1292
+faixa_risco (without NIP): BAIXO 1225 · MEDIO 58 · ALTO 9
+top: BEN-001396 0.81  2 protocolos abertos; sentimento médio -0,23
+     BEN-000273 0.80  3 protocolos abertos; 2 contatos negativos; 5 contatos com o call center
+     BEN-000771 0.79  sentimento médio -0,40
+```
+Scores for beneficiaries that were in the training split are in-sample; the out-of-sample figure quoted in
+the app (recall 77%, 40 of 52 NIP-openers) is the test-split result above.

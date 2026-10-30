@@ -29,9 +29,15 @@ Para responder, o analista precisa encontrar, entre dezenas de guias de autoriza
 No instante em que a NIP chega, o copiloto:
 
 1. **Infere a VPP correta** aplicando as regras do negócio (pai vs. filha, janela de 65 dias, casos já resolvidos).
-2. **Rascunha o parecer** consultando o rol de procedimentos da ANS.
-3. **Entrega tudo no fluxo do analista**, com um **score de confiança**.
+2. **Rascunha o parecer** consultando o rol de procedimentos da ANS e a cobertura do plano.
+3. **Entrega tudo no fluxo do analista**, com um **score de confiança** e o porquê de cada decisão.
 4. Quando a confiança é alta, o caso pode ser **fechado sem intervenção humana**.
+
+E o mesmo app dá à coordenação quatro movimentos:
+
+| Enxergar | Perguntar | Resolver | Prevenir |
+|---|---|---|---|
+| **Painel**: backlog por prazo, exposição a multa em R$, temas críticos | **Agente NIP**: perguntas em português, respondidas com dado governado | **Fila**: VPP inferida, guias descartadas e o motivo, checagem no rol, parecer pronto | **Radar**: quem vai abrir NIP antes de abrir, e o call center aciona |
 
 ---
 
@@ -48,18 +54,39 @@ No instante em que a NIP chega, o copiloto:
 
 ---
 
+## O que o time vê
+
+**Painel da coordenação**: 120 NIPs em aberto, R$ 3,2 mi de exposição (premissa editável), o que fazer agora.
+
+<img src="img/painel.png" alt="Painel" style="width:100%; border:1px solid #e1e0d9; border-radius:6px; page-break-inside:avoid;">
+
+**Fila**: a NIP sobre a banda gástrica, a guia escolhida com 99% de confiança e as guias descartadas pela regra pai/filha, por procedimento diferente e pela janela de 65 dias.
+
+<img src="img/fila.png" alt="Fila" style="width:100%; border:1px solid #e1e0d9; border-radius:6px; page-break-inside:avoid;">
+
+**Agente NIP**: "qual a exposição a multa por tema?" respondido com os dados, o gráfico e o SQL.
+
+<img src="img/agente.png" alt="Agente" style="width:100%; border:1px solid #e1e0d9; border-radius:6px; page-break-inside:avoid;">
+
+**Radar de prevenção**: beneficiários que ainda não abriram NIP, mas cujo comportamento no call center aponta que vão abrir.
+
+<img src="img/radar.png" alt="Radar" style="width:100%; border:1px solid #e1e0d9; border-radius:6px; page-break-inside:avoid;">
+
+---
+
 ## Provas do protótipo (dados sintéticos, mas executado de verdade)
 
 - **96,6%** de acerto na associação NIP→VPP em **208 NIPs** (contra o gabarito), forte em todos os casos difíceis.
 - **Confiança média 98,8%**; **120 de 120** NIPs abertas classificadas como auto-resolvíveis no corte de confiança.
-- Modelo de **propensão a abrir NIP** com **ROC-AUC 0,926** — antecipa a insatisfação no call center.
+- Modelo de **propensão a abrir NIP** com **ROC-AUC 0,926**: identificaria **77% das NIPs** (40 de 52 no teste fora da amostra). Hoje aponta **9 beneficiários em risco alto e 67 em observação**.
+- Backlog atual: **106 NIPs vencidas = R$ 3,2 mi de exposição** (premissa ilustrativa de R$ 30 mil por NIP).
 - Governança de PII (LGPD) aplicada e **preservada em todas as camadas** (inclusive no app e no Genie).
 
 ---
 
 ## Como funciona (uma olhada na arquitetura)
 
-**Lakeflow** ingere as manifestações → **Unity Catalog** governa (masking de PII, linhagem) → **Lakebase** serve a fila em baixa latência → **Agente de IA + ML** inferem VPP, redigem parecer e preveem propensão → **Genie** dá consulta em linguagem natural → **App Databricks** é o copiloto do analista.
+**Lakeflow** ingere as manifestações → **Unity Catalog** governa (masking de PII, linhagem) → **Agente de IA + ML** inferem VPP, redigem parecer e pontuam a propensão → **Lakebase** serve a fila e o radar em baixa latência e recebe as decisões do analista → **Genie** responde perguntas em nome de quem pergunta → **App Databricks** junta tudo no centro de comando.
 
 > Uma jornada integrada, não peças soltas. O dado flui do bruto ao parecer sem sair da plataforma.
 
@@ -90,11 +117,11 @@ No instante em que a NIP chega, o copiloto:
 
 ## Roadmap
 
-1. **Agora:** inferência da VPP + parecer sugerido no app (entregue).
-2. Automação do parecer com **no-human-in-the-loop** acima do corte de confiança.
-3. **Reembolso:** análise de documentos e imagens com LLM.
-4. **Call center:** intervir na insatisfação (modelo de propensão) **antes** de virar NIP.
-5. Escrita direta no **Salesforce** via conector nativo.
+1. **Entregue no protótipo:** painel, fila com VPP inferida e parecer, radar de prevenção e agente Genie.
+2. Piloto de 4 semanas com um grupo de analistas: medir tempo por NIP e NIPs dentro do prazo.
+3. Automação do parecer com **no-human-in-the-loop** acima do corte de confiança.
+4. Escrita direta no **Salesforce** via conector nativo, onde o analista já trabalha.
+5. **Reembolso:** análise de documentos e imagens com LLM.
 
 ---
 

@@ -2,3 +2,5 @@ command: ['npm', 'run', 'start']
 env:
   - name: LAKEBASE_ENDPOINT
     valueFrom: postgres
+  - name: DATABRICKS_GENIE_SPACE_ID
+    valueFrom: genie-space

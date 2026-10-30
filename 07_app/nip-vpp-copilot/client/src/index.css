@@ -80,3 +80,38 @@
     --sidebar-ring: oklch(0.552 0.016 285.938); */
   }
 }
+
+/* ---- Data-viz + status tokens (dataviz reference palette; validated light + dark) ---- */
+:root {
+  --viz-series-1: #2a78d6;   /* single-series magnitude (validated) */
+  --viz-deemph:   #d6d5ce;   /* emphasis form: the "context" series */
+  --viz-grid:     #e1e0d9;
+  --viz-axis:     #c3c2b7;
+  --viz-negative: #e34948;   /* diverging pole: negative sentiment */
+  --viz-positive: #2a78d6;   /* diverging pole: positive sentiment */
+  --viz-neutral:  #c3c2b7;
+  --status-good:     #0ca30c;
+  --status-warning:  #fab219;
+  --status-serious:  #ec835a;
+  --status-critical: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not(.light)) {
+    --viz-series-1: #3987e5;
+    --viz-deemph:   #4b4a46;
+    --viz-grid:     #2c2c2a;
+    --viz-axis:     #383835;
+    --viz-negative: #e66767;
+    --viz-positive: #3987e5;
+    --viz-neutral:  #6b6a65;
+  }
+}
+.dark {
+  --viz-series-1: #3987e5;
+  --viz-deemph:   #4b4a46;
+  --viz-grid:     #2c2c2a;
+  --viz-axis:     #383835;
+  --viz-negative: #e66767;
+  --viz-positive: #3987e5;
+  --viz-neutral:  #6b6a65;
+}
