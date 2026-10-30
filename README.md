@@ -130,7 +130,7 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 | Genie | space `Agente NIP`, with domain instructions; embedded in the app on behalf of the user | [evidence/06](evidence/06_genie.md) |
 | App | `nip-vpp-copilot` (RUNNING) | [evidence/08](evidence/08_app.md) |
 
-Business deck: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf) · Demo script: [`deck/roleplay-notes.md`](deck/roleplay-notes.md).
+Business deck (submission): [`deck/fe-bar-deck.pdf`](deck/fe-bar-deck.pdf), exported from Google Slides (generator in `deck/gslides/`, speaker notes = demo script) · Demo script: [`deck/roleplay-notes.md`](deck/roleplay-notes.md) · Markdown version: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf).
 
 ## The app: a command center in four moves
 
