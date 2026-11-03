@@ -8,7 +8,7 @@ A história tem um arco simples, uma tela por ato:
 
 | Ato | Tela | Pergunta que responde | Tempo |
 |---|---|---|---|
-| 0 | (slide) | Qual é o problema? | 0:30 |
+| 0 | (slides) | Qual é o contexto, o problema e o resultado? | 1:00 |
 | 1 | **Painel** | Como estamos e quanto isso custa? | 1:30 |
 | 2 | **Agente NIP** | E se eu quiser perguntar outra coisa? | 1:00 |
 | 3 | **Fila de NIPs** | Como o analista resolve uma NIP agora? | 3:00 |
@@ -17,12 +17,18 @@ A história tem um arco simples, uma tela por ato:
 
 ---
 
-## Ato 0 — enquadramento (30 s, antes de abrir o app)
+## Ato 0 — contexto, problema e resultado (1 min, nos slides, antes de abrir o app)
 
-> "Toda NIP que chega na ANS dá 5 dias para a operadora responder. Passou disso, é multa. Hoje o
-> analista gasta uns 25 minutos por NIP só caçando a guia certa entre as guias do beneficiário e
-> escrevendo o parecer. Vou mostrar como o time trabalha com o copiloto: primeiro o painel da
-> coordenação, depois a resolução de uma NIP real da fila e, por fim, como evitar a próxima."
+Nem todo mundo na sala é de saúde suplementar: explique o jogo antes de mostrar o resultado.
+
+> "Antes do resultado, um minuto de contexto. Quando o plano de saúde nega um procedimento ou um
+> material e a ouvidoria não resolve, o beneficiário abre uma NIP: uma reclamação formal na ANS, o
+> regulador. A operadora tem 5 dias para responder; passou disso, é multa. Para responder, o analista
+> precisa achar, entre as várias guias de autorização (VPPs) do beneficiário, a que explica a
+> reclamação. Hoje ele gasta uns 25 minutos por NIP caçando a guia e escrevendo o parecer. Com o
+> copiloto, o backlog que hoje representa R$ 3,2 milhões de exposição fica pronto para resolver. Vou
+> mostrar como o time trabalha: primeiro o painel da coordenação, depois a resolução de uma NIP real
+> da fila e, por fim, como evitar a próxima."
 
 ## Ato 1 — Painel: "como estamos" (1:30)
 

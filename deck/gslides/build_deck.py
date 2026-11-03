@@ -183,31 +183,39 @@ class Slide:
 
 
 # ------------------------------------------------------------------------------------------
-# The storyline: outcome first, then problem, solution (one move per screen), proof, value,
-# how it works, decisions, next step.
+# The storyline: context first (the domain in plain words, for anyone outside health insurance),
+# then the problem, the outcome tied to each pain, the solution (one move per screen), proof,
+# value, how it works, decisions, next step.
 # ------------------------------------------------------------------------------------------
 def build_slides():
     S = []
 
-    s = Slide("s02"); S.append((s, """Abra com o resultado, antes de qualquer arquitetura. "Toda NIP que chega na ANS dá 5 dias para a operadora responder; passou disso, é multa. Este protótipo pega o backlog que hoje representa R$ 3,2 milhões de exposição e deixa cada NIP pronta para resolver." Aponte os três números e diga que o resto da conversa explica como se chega neles."""))
-    s.header("O resultado, antes de tudo", "O backlog que custava R$ 3,2 mi ", "ficou pronto para resolver",
-             "Protótipo ponta a ponta na Databricks para uma operadora de saúde, sobre um caso real e com dados sintéticos.")
-    s.metric(0.6, 1.85, 3.95, 2.4, "R$ 3,2 mi", "de exposição a multa no backlog", "106 NIPs vencidas",
-             "Premissa ilustrativa de R$ 30 mil por NIP fora do prazo, editável na tela pela própria operadora.")
-    s.metric(4.7, 1.85, 3.95, 2.4, "25 → 8 min", "por NIP, da busca ao parecer", "120 de 120 prontas",
-             "Toda NIP aberta já tem a guia inferida, com confiança de 80% ou mais, e o parecer rascunhado.")
-    s.metric(8.8, 1.85, 3.95, 2.4, "77%", "das NIPs antecipadas pelo modelo", "Prevenção no call center",
-             "O radar aponta quem vai abrir NIP antes da reclamação chegar à ANS (teste fora da amostra).")
-    s.steps(4.45, "Um app,\nquatro movimentos", [("1", "Enxergar", "o risco no painel"), ("2", "Perguntar", "ao agente, em português"),
-            ("3", "Resolver", "cada NIP em minutos"), ("4", "Prevenir", "a próxima reclamação")])
-    s.banner("Em uma frase:", "o copiloto acha a guia certa, escreve o parecer e aponta quem vai reclamar antes de reclamar.", y=5.75, h=0.7, size=12)
-    s.source("Números do protótipo sobre 208 NIPs sintéticas. Premissas de multa e de tempo economizado são ilustrativas.")
+    s = Slide("s02"); S.append((s, """Transição logo depois da capa: "Antes do resultado, o contexto, do jeito que a área de NIPs descreve." Fale devagar aqui; é o momento de a executiva concordar com a dor e de quem não é do setor entender o jogo."""))
+    s.divider("01  ·  O CONTEXTO", "Cinco dias para responder,", "ou a multa chega",
+              "O que é uma NIP, como ela nasce, quanto custa hoje e por que achar a guia certa é difícil.")
 
-    s = Slide("s03"); S.append((s, """Transição: "Primeiro, o problema, do jeito que a área de NIPs descreve." Fale devagar aqui; é o momento de a executiva concordar com a dor."""))
-    s.divider("01  ·  O PROBLEMA", "Cinco dias para responder,", "ou a multa chega",
-              "Como a NIP nasce, quanto custa hoje e por que achar a guia certa é difícil.")
+    s = Slide("s03"); S.append((s, """Este slide é para quem não é do setor: os personagens em um minuto. A operadora autoriza ou nega; a ANS regula e multa; a NIP é a reclamação formal, com 5 dias de prazo; a guia (VPP) é o pedido de autorização, e o beneficiário tem várias; a guia pai tem itens filhos para material e OPME; o rol diz o que é cobertura obrigatória. Use o caso da demo como fio: "Uma beneficiária teve a cirurgia bariátrica autorizada, mas a banda gástrica, um item filho, foi negada. Ela reclamou na ANS. A operadora tem 5 dias para achar a guia certa e responder." """))
+    s.header("O contexto", "Quando o plano nega, ", "o beneficiário reclama na ANS",
+             "Saúde suplementar em um minuto: quem são os personagens e o que está em jogo para a operadora.")
+    for i, (lab, head, body) in enumerate([
+        ("O cliente", "Operadora de plano de saúde",
+         "Autoriza ou nega cada procedimento, exame ou material pedido pelo médico. A área de NIPs responde às reclamações."),
+        ("O regulador", "ANS",
+         "Agência Nacional de Saúde Suplementar: fiscaliza os planos, recebe as reclamações dos beneficiários e multa a operadora."),
+        ("A reclamação", "NIP",
+         "Notificação de Intermediação Preliminar: a queixa formal do beneficiário na ANS. A operadora tem 5 dias para responder, ou leva multa."),
+        ("O pedido", "Guia (VPP)",
+         "Validação de procedimento prévio: o pedido de autorização de cada procedimento. O beneficiário tem várias, e a NIP não diz qual é a dela."),
+        ("O detalhe", "Guia pai e item filho",
+         "A guia de uma cirurgia (pai) tem itens filhos para material, medicamento e OPME: órteses, próteses e materiais especiais."),
+        ("A régua", "Rol da ANS",
+         "A lista de coberturas obrigatórias. Item negado que está no rol e no plano indica que a negativa precisa ser revista."),
+    ]):
+        s.info_card(0.6 + (i % 3) * 4.1, 1.85 + (i // 3) * 1.9, 3.95, 1.75, lab, head, body)
+    s.banner("O trabalho da área de NIPs:", "para cada reclamação, achar a guia certa, checar a cobertura e responder à ANS em até 5 dias.", y=5.75, h=0.7, size=12)
+    s.source("Termos da saúde suplementar no Brasil. Cenário inspirado em uma discovery real com uma operadora (set/2026); todos os dados do protótipo são sintéticos.")
 
-    s = Slide("s04"); S.append((s, """Conte a jornada da esquerda para a direita: a negativa, a ouvidoria que não resolve, a reclamação na ANS e a corrida do analista para achar a guia e escrever o parecer em 5 dias. "Hoje isso leva uns 25 minutos por NIP, e às vezes três analistas abrem a mesma." Feche com a frase da faixa escura: o sinal aparece antes, no call center. Ela prepara o radar."""))
+    s = Slide("s04"); S.append((s,"""Conte a jornada da esquerda para a direita: a negativa, a ouvidoria que não resolve, a reclamação na ANS e a corrida do analista para achar a guia e escrever o parecer em 5 dias. "Hoje isso leva uns 25 minutos por NIP, e às vezes três analistas abrem a mesma." Feche com a frase da faixa escura: o sinal aparece antes, no call center. Ela prepara o radar."""))
     s.header("Como é hoje", "Cada NIP vira ", "uma corrida manual contra o prazo",
              "Quando a negativa não se resolve na ouvidoria, o beneficiário reclama na ANS. A partir daí são 5 dias.")
     s.metric(0.6, 1.85, 3.95, 2.4, "5 dias", "de prazo da ANS por NIP", "Depois disso, multa",
@@ -236,11 +244,25 @@ def build_slides():
     s.banner("Por isso não basta um SQL:", "o agente aplica as três regras e explica cada escolha na tela.")
     s.source("Regras levantadas com a área de negócio na POC do cliente; reproduzidas no protótipo com casos difíceis plantados de propósito.")
 
-    s = Slide("s06"); S.append((s, """Transição: "Agora, como o time trabalha com o copiloto." A partir daqui, cada slide é uma tela do app. Se estiver com o app aberto, alterne para a demo."""))
+    s = Slide("s06"); S.append((s, """Agora o resultado, ligado a cada dor que você acabou de mostrar. "Este protótipo pega o backlog que hoje representa R$ 3,2 milhões de exposição e deixa cada NIP pronta para resolver." Aponte os três números e leia a linha de baixo: cada dor do processo tem uma resposta. Diga que o resto da conversa mostra como se chega nesses números."""))
+    s.header("O que muda com o copiloto", "O backlog que custava R$ 3,2 mi ", "ficou pronto para resolver",
+             "Protótipo ponta a ponta na Databricks para a área de NIPs, com dados sintéticos: cada dor do processo tem uma resposta.")
+    s.metric(0.6, 1.85, 3.95, 2.4, "R$ 3,2 mi", "de exposição a multa no backlog", "106 NIPs vencidas",
+             "Premissa ilustrativa de R$ 30 mil por NIP fora do prazo, editável na tela pela própria operadora.")
+    s.metric(4.7, 1.85, 3.95, 2.4, "25 → 8 min", "por NIP, da busca ao parecer", "120 de 120 prontas",
+             "Toda NIP aberta já tem a guia inferida, com confiança de 80% ou mais, e o parecer rascunhado.")
+    s.metric(8.8, 1.85, 3.95, 2.4, "77%", "das NIPs antecipadas pelo modelo", "Prevenção no call center",
+             "O radar aponta quem vai abrir NIP antes da reclamação chegar à ANS (teste fora da amostra).")
+    s.steps(4.45, "Da dor\nà resposta", [("1", "Prazo de 5 dias", "toda NIP aberta já chega pronta"), ("2", "Busca à mão", "o agente acha a guia certa"),
+            ("3", "Três regras", "aplicadas e explicadas na tela"), ("4", "Aviso ignorado", "o radar avisa antes da NIP")])
+    s.banner("Em uma frase:", "o copiloto acha a guia certa, escreve o parecer e aponta quem vai reclamar antes de reclamar.", y=5.75, h=0.7, size=12)
+    s.source("Números do protótipo sobre 208 NIPs sintéticas. Premissas de multa e de tempo economizado são ilustrativas.")
+
+    s = Slide("s07"); S.append((s, """Transição: "Agora, como o time trabalha com o copiloto." A partir daqui, cada slide é uma tela do app. Se estiver com o app aberto, alterne para a demo."""))
     s.divider("02  ·  A SOLUÇÃO", "Um centro de comando", "para as NIPs",
               "Enxergar, perguntar, resolver e prevenir, num só app, sobre o mesmo dado governado.")
 
-    s = Slide("s07"); S.append((s, """Apresente o mapa da demo: quatro telas, quatro perguntas da coordenação. "Vou passar por elas nesta ordem." O ponto para o técnico: tudo lê o mesmo dado governado, então painel, agente e fila nunca discordam."""))
+    s = Slide("s08"); S.append((s, """Apresente o mapa da demo: quatro telas, quatro perguntas da coordenação. "Vou passar por elas nesta ordem." O ponto para o técnico: tudo lê o mesmo dado governado, então painel, agente e fila nunca discordam."""))
     s.header("Quatro movimentos", "Do painel à prevenção, ", "num só app",
              "Cada tela responde a uma pergunta da coordenação de NIPs.")
     w = (12.15 - 3 * 0.15) / 4
@@ -253,7 +275,7 @@ def build_slides():
         s.card(0.6 + i * (w + 0.15), 1.85, w, 3.55, lab, head, bul, foot, hsize=14, bsize=10.5)
     s.banner("Um dado só:", "o painel, o agente e a fila leem as mesmas tabelas governadas, então nunca discordam.")
 
-    s = Slide("s08"); S.append((s, """Tell: "Isso é o que a coordenadora vê quando chega de manhã." Show: 120 abertas, 6 vencendo em até 1 dia, R$ 3,2 mi de exposição. Momento ao vivo: pergunte à executiva qual é a multa média deles e troque a premissa; tudo recalcula. Tell: "Cada número sai do dado governado. Não é planilha." """))
+    s = Slide("s09"); S.append((s, """Tell: "Isso é o que a coordenadora vê quando chega de manhã." Show: 120 abertas, 6 vencendo em até 1 dia, R$ 3,2 mi de exposição. Momento ao vivo: pergunte à executiva qual é a multa média deles e troque a premissa; tudo recalcula. Tell: "Cada número sai do dado governado. Não é planilha." """))
     s.header("Enxergar", "A coordenação vê ", "o risco em reais, não em linhas",
              "Posição da fila, exposição a multa e as próximas ações, numa tela.")
     s.screenshot("Painel", [("120 NIPs em aberto", "6 vencem em até 1 dia e 106 já passaram do prazo da ANS."),
@@ -261,7 +283,7 @@ def build_slides():
                             ("O que fazer agora", "Cada alerta leva direto à fila filtrada, ao radar ou ao agente.")])
     s.source("Premissas ilustrativas: R$ 30 mil por NIP vencida e 17 minutos economizados por NIP.")
 
-    s = Slide("s09"); S.append((s, """O coração da demo. Abra a fila crítica e a NIP MAN-0002164: "a guia da cirurgia saiu, só falta o material". Mostre a guia escolhida (item filho, 99%), as três descartadas e o motivo de cada uma, a checagem no rol ("negado, mas no rol e coberto: reverter") e o parecer pronto. Clique em Aprovar. Tell: "Eram 25 minutos de busca e redação. Agora é uma revisão. Essa NIP saiu do risco de multa." """))
+    s = Slide("s10"); S.append((s, """O coração da demo. Abra a fila crítica e a NIP MAN-0002164: "a guia da cirurgia saiu, só falta o material". Mostre a guia escolhida (item filho, 99%), as três descartadas e o motivo de cada uma, a checagem no rol ("negado, mas no rol e coberto: reverter") e o parecer pronto. Clique em Aprovar. Tell: "Eram 25 minutos de busca e redação. Agora é uma revisão. Essa NIP saiu do risco de multa." """))
     s.header("Resolver", "Cada NIP vira ", "uma revisão de um minuto",
              "NIP MAN-0002164: a beneficiária reclama da banda gástrica que falta para a cirurgia bariátrica.")
     s.screenshot("Fila", [("Guia certa, 99% de confiança", "O agente escolhe o item filho (o material), não a guia da cirurgia."),
@@ -270,7 +292,7 @@ def build_slides():
                           ("Parecer pronto", "O analista revisa e aprova; a decisão fica gravada no Lakebase.")])
     s.source("Dados sintéticos. A explicação de cada descarte vem da tabela de guias avaliadas, publicada junto com o resultado do agente.")
 
-    s = Slide("s10"); S.append((s, """Tell: "E se a coordenadora tiver uma pergunta que não está no painel?" Show: "Qual a exposição a multa por tema?" O agente responde por tema (stent R$ 570 mil, hemodiálise R$ 480 mil), com gráfico, tabela e o SQL; abra o SQL para o técnico. Tell: "Ele responde com as permissões de quem pergunta: o nome chega mascarado." Pergunta reserva: quais NIPs vencem em até 1 dia."""))
+    s = Slide("s11"); S.append((s, """Tell: "E se a coordenadora tiver uma pergunta que não está no painel?" Show: "Qual a exposição a multa por tema?" O agente responde por tema (stent R$ 570 mil, hemodiálise R$ 480 mil), com gráfico, tabela e o SQL; abra o SQL para o técnico. Tell: "Ele responde com as permissões de quem pergunta: o nome chega mascarado." Pergunta reserva: quais NIPs vencem em até 1 dia."""))
     s.header("Perguntar", "Qualquer pergunta, ", "com o dado governado",
              "O Agente NIP é o Genie dentro do app, a um clique de qualquer tela.")
     s.screenshot("Agente", [("Em português, com números", "\"Qual a exposição a multa por tema?\" Stent lidera, com R$ 570 mil."),
@@ -278,7 +300,7 @@ def build_slides():
                             ("Com as permissões de quem pergunta", "Roda em nome do usuário: o dado pessoal chega mascarado pelo Unity Catalog.")])
     s.source("Genie space com glossário da área, regras de resposta e SQL certificado. O mesmo agente fica disponível no Databricks One.")
 
-    s = Slide("s11"); S.append((s, """A ponte vem da NIP que você acabou de resolver: na linha do tempo, em 02/08 a beneficiária ligou e disse "Vou reclamar na ANS se não resolverem", sete semanas antes. "Ela avisou." Mostre o radar: 9 em risco alto e 67 em observação, cada um com o motivo. Acione o primeiro. Tell: "A NIP mais barata é a que não acontece." """))
+    s = Slide("s12"); S.append((s, """A ponte vem da NIP que você acabou de resolver: na linha do tempo, em 02/08 a beneficiária ligou e disse "Vou reclamar na ANS se não resolverem", sete semanas antes. "Ela avisou." Mostre o radar: 9 em risco alto e 67 em observação, cada um com o motivo. Acione o primeiro. Tell: "A NIP mais barata é a que não acontece." """))
     s.header("Prevenir", "A NIP mais barata ", "é a que não acontece",
              "O radar aponta quem ainda não abriu NIP, mas se comporta no call center como quem abriu.")
     s.screenshot("Radar", [("\"Vou reclamar na ANS se não resolverem.\"", "A beneficiária da NIP MAN-0002164 avisou no call center em 02/08, sete semanas antes."),
@@ -286,11 +308,11 @@ def build_slides():
                            ("77% das NIPs antecipadas", "40 de 52 no teste fora da amostra. O call center aciona e registra a ação.")])
     s.source("Modelo de propensão registrado no Unity Catalog e servido em endpoint; pontuação em lote para o radar.")
 
-    s = Slide("s12"); S.append((s, """Transição: "Isso funciona? Medimos." Saia da demo e volte para os slides."""))
+    s = Slide("s13"); S.append((s, """Transição: "Isso funciona? Medimos." Saia da demo e volte para os slides."""))
     s.divider("03  ·  RESULTADOS", "O que o protótipo", "já provou",
               "Números medidos contra um gabarito, com os casos difíceis plantados de propósito.")
 
-    s = Slide("s13"); S.append((s, """Fale para a executiva primeiro (96,6% de acerto, 100% das abertas prontas) e depois desça para o técnico na linha de baixo: o acerto por tipo de caso difícil. Seja honesto sobre o ponto fraco: a guia antiga do mesmo tema (78,6%) é onde o piloto vai calibrar regras e o corte de confiança."""))
+    s = Slide("s14"); S.append((s, """Fale para a executiva primeiro (96,6% de acerto, 100% das abertas prontas) e depois desça para o técnico na linha de baixo: o acerto por tipo de caso difícil. Seja honesto sobre o ponto fraco: a guia antiga do mesmo tema (78,6%) é onde o piloto vai calibrar regras e o corte de confiança."""))
     s.header("Provas", "Medido contra gabarito, ", "inclusive nos casos difíceis",
              "208 NIPs sintéticas com as armadilhas reais do processo: pai/filha, janela de 65 dias e status que muda.")
     s.metric(0.6, 1.85, 3.95, 2.4, "96,6%", "de acerto na guia, em 208 NIPs", "Associação NIP → VPP",
@@ -305,7 +327,7 @@ def build_slides():
     s.banner("O caso mais difícil é a guia antiga do mesmo tema:", "é onde o piloto vai calibrar as regras e o corte de confiança.", y=5.75, h=0.7, size=12)
     s.source("Avaliação do agente e métricas do modelo no repositório do projeto (evidence/04 e evidence/05). Dados sintéticos.")
 
-    s = Slide("s14"); S.append((s, """Troque de altitude de propósito: o card da esquerda fala com quem paga (multa, vazão, automação controlada), o da direita com quem opera (regras, rastreabilidade, LGPD). Termine devolvendo a premissa para a executiva: "Quanto vale para vocês? O número é de vocês." """))
+    s = Slide("s15"); S.append((s, """Troque de altitude de propósito: o card da esquerda fala com quem paga (multa, vazão, automação controlada), o da direita com quem opera (regras, rastreabilidade, LGPD). Termine devolvendo a premissa para a executiva: "Quanto vale para vocês? O número é de vocês." """))
     s.header("Valor", "O que muda ", "para quem paga e para quem opera",
              "O mesmo app responde ao custo e ao risco da executiva e à qualidade e à operação da área.")
     s.card(0.6, 1.85, 6.0, 3.55, "Patrocinador executivo", "Menos multa, mais vazão",
@@ -317,11 +339,11 @@ def build_slides():
     s.banner("Quanto vale para vocês?", "A premissa de multa é de vocês: o painel recalcula na hora.")
     s.source("Impacto ilustrativo: 2.000 NIPs por mês × 17 minutos economizados por NIP. Premissas editáveis no painel.")
 
-    s = Slide("s15"); S.append((s, """Transição para o técnico: "Como isso está construído." Mantenha a executiva na sala com uma frase: tudo numa plataforma só, sem costurar ferramentas."""))
+    s = Slide("s16"); S.append((s, """Transição para o técnico: "Como isso está construído." Mantenha a executiva na sala com uma frase: tudo numa plataforma só, sem costurar ferramentas."""))
     s.divider("04  ·  COMO FUNCIONA", "Do dado bruto ao parecer,", "numa plataforma só",
               "A arquitetura, as decisões e por que Databricks.")
 
-    s = Slide("s16"); S.append((s, """Leia a linha de cima como uma jornada: o dado entra pelo Lakeflow, é governado no Unity Catalog, a IA infere a guia e pontua o risco, o Lakebase serve a operação, o Genie responde e o app junta tudo. Depois, os três porquês. Se perguntarem da POC em BigQuery: o bloqueio era entregar para a área de negócio; aqui o app e o Genie entregam."""))
+    s = Slide("s17"); S.append((s, """Leia a linha de cima como uma jornada: o dado entra pelo Lakeflow, é governado no Unity Catalog, a IA infere a guia e pontua o risco, o Lakebase serve a operação, o Genie responde e o app junta tudo. Depois, os três porquês. Se perguntarem da POC em BigQuery: o bloqueio era entregar para a área de negócio; aqui o app e o Genie entregam."""))
     s.header("Arquitetura", "Seis camadas, ", "uma jornada integrada",
              "O dado entra pelo Lakeflow, é governado no Unity Catalog e chega ao analista sem sair da plataforma.")
     s.boxes(1.85, [("1", "Lakeflow", "ingestão com Auto Loader, bronze, silver e gold"), ("2", "Unity Catalog", "masking de CPF e nome, tags e linhagem"),
@@ -335,7 +357,7 @@ def build_slides():
                 "O conector nativo e bidirecional leva o parecer ao Salesforce: próximo passo do roadmap.")
     s.banner("Tudo versionado e reproduzível:", "pipeline em Asset Bundle, modelo registrado no Unity Catalog e app publicado com service principal.", size=12)
 
-    s = Slide("s17"); S.append((s, """Este slide é para o técnico e para a nota de "decisões e trade-offs". Uma frase por card: busca fixa mais LLM porque cada escolha precisa ser explicável; Lakebase porque a operação lê e grava em milissegundos; masking no lugar de filtro de linha porque o filtro esvaziava a fila. Feche com o OBO: o agente nunca vê mais do que o usuário."""))
+    s = Slide("s18"); S.append((s, """Este slide é para o técnico e para a nota de "decisões e trade-offs". Uma frase por card: busca fixa mais LLM porque cada escolha precisa ser explicável; Lakebase porque a operação lê e grava em milissegundos; masking no lugar de filtro de linha porque o filtro esvaziava a fila. Feche com o OBO: o agente nunca vê mais do que o usuário."""))
     s.header("Decisões e trade-offs", "Decisões que ", "priorizam o auditável",
              "Em saúde regulada, cada escolha precisa ser explicada ao regulador e ao analista.")
     s.card(0.6, 1.85, 3.95, 3.55, "Decisão 1", "Busca fixa e LLM, não um agente solto",
@@ -349,7 +371,7 @@ def build_slides():
            "LGPD sem travar a operação", hsize=14, bsize=11)
     s.banner("E o agente roda em nome de quem pergunta:", "o Genie nunca vê mais do que o usuário pode ver.")
 
-    s = Slide("s18"); S.append((s, """Feche com o pedido concreto. "O protótipo já roda ponta a ponta. O caminho é discovery das tabelas reais com a engenharia e um piloto de quatro semanas com um grupo de analistas, medindo tempo por NIP e NIPs dentro do prazo." Os três cards de cima são o que vem depois do piloto. Termine perguntando quem do time entraria no piloto."""))
+    s = Slide("s19"); S.append((s, """Feche com o pedido concreto. "O protótipo já roda ponta a ponta. O caminho é discovery das tabelas reais com a engenharia e um piloto de quatro semanas com um grupo de analistas, medindo tempo por NIP e NIPs dentro do prazo." Os três cards de cima são o que vem depois do piloto. Termine perguntando quem do time entraria no piloto."""))
     s.header("Próximo passo", "Do protótipo ao piloto ", "em quatro semanas",
              "O caminho que funciona: dado real, um grupo de analistas e métricas desde o primeiro dia.")
     s.info_card(0.6, 1.85, 3.95, 2.4, "Depois do piloto", "Fechar sozinho acima do corte",
@@ -381,7 +403,7 @@ def main():
     title = [r.strip() for r in runs("CENTERED_TITLE") if r.strip()]
     subtitle = "".join(runs("SUBTITLE")).strip()
     for old, new in [(title[0], "NIPs da ANS"), (title[-1], "no prazo"),
-                     (subtitle, "NIP → VPP Copilot · Lucas Brabo · FE Bar · out/2026")]:
+                     (subtitle, "NIP → VPP Copilot · Lucas Brabo · FE Bar · nov/2026")]:
         if old != new:
             reqs.append({"replaceAllText": {"containsText": {"text": old, "matchCase": True}, "replaceText": new, "pageObjectIds": [cover]}})
     api("POST", base + ":batchUpdate", {"requests": reqs})
@@ -405,9 +427,9 @@ def main():
                     reqs.append({"deleteText": {"objectId": el["objectId"], "textRange": {"type": "ALL"}}})
     if reqs:
         api("POST", base + ":batchUpdate", {"requests": reqs})
-    cover_note = ("Abertura em 30 segundos: \"Toda NIP que chega na ANS dá 5 dias para a operadora responder. Passou disso, é multa. "
-                  "Vou mostrar como o time trabalha com o copiloto: o painel da coordenação, a resolução de uma NIP real da fila e, "
-                  "por fim, como evitar a próxima.\"")
+    cover_note = ("Abertura em 30 segundos: \"Vou mostrar um copiloto para a área de NIPs de uma operadora de saúde. "
+                  "Antes do resultado, um minuto de contexto, porque o problema é muito específico do setor: toda NIP que chega "
+                  "na ANS dá 5 dias para a operadora responder, e passou disso é multa.\"")
     notes = [(cover, cover_note)] + [(s.sid, n) for s, n in built] + [(closing, "Encerramento: agradeça e abra para perguntas. Tenha o app aberto para responder mostrando.")]
     reqs = []
     for sid, text in notes:

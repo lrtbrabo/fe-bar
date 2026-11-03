@@ -4,10 +4,11 @@ Embed the app screenshots into the Google Slides deck built by build_deck.py.
 The Slides API only inserts images from public URLs, and the screenshots must not be
 shared publicly. So this exports the deck as PPTX, swaps each "[print: X]" frame for the
 matching PNG in deck/img/, and uploads the result as a new, private Google Slides file
-(speaker notes, master and layouts survive the round-trip).
+(speaker notes, master and layouts survive the round-trip). Pass a second id to overwrite
+that deck instead, keeping its link (the previous version stays in the Drive history).
 
-Usage:  python embed_screenshots.py <native_presentation_id>
-Prints the new presentation id. Requires python-pptx.
+Usage:  python embed_screenshots.py <native_presentation_id> [<target_presentation_id>]
+Prints the resulting presentation id. Requires python-pptx.
 """
 from __future__ import annotations
 
@@ -29,7 +30,7 @@ NAME = "NIPs da ANS no prazo · NIP → VPP Copilot (FE Bar · Lucas Brabo)"
 
 
 def main():
-    pres = sys.argv[1]
+    pres, target = sys.argv[1], (sys.argv[2] if len(sys.argv) > 2 else None)
     tmp_in, tmp_out = Path("/tmp/deck_native.pptx"), Path("/tmp/deck_with_images.pptx")
 
     # 1) export (the Slides export endpoint has no 10 MB Drive-export cap)
@@ -50,9 +51,9 @@ def main():
     deck.save(str(tmp_out))
 
     # 3) resumable upload, converting back to Google Slides (private by default)
-    meta = json.dumps({"name": NAME, "mimeType": "application/vnd.google-apps.presentation"}).encode()
-    start = urllib.request.Request("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id",
-                                   data=meta, method="POST")
+    meta = json.dumps({"name": NAME, "mimeType": "application/vnd.google-apps.presentation"} if not target else {}).encode()
+    url = "https://www.googleapis.com/upload/drive/v3/files" + (f"/{target}" if target else "")
+    start = urllib.request.Request(url + "?uploadType=resumable&fields=id", data=meta, method="PATCH" if target else "POST")
     for k, v in {"Authorization": f"Bearer {token()}", "x-goog-user-project": QUOTA,
                  "Content-Type": "application/json; charset=UTF-8", "X-Upload-Content-Type": PPTX}.items():
         start.add_header(k, v)

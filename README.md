@@ -1,6 +1,6 @@
 # NIP → VPP Copilot — automating ANS complaint resolution for a health insurer
 
-> **The outcome first.** A Brazilian health insurer is fined by the regulator (ANS) whenever it
+> **The problem, then the outcome.** A Brazilian health insurer is fined by the regulator (ANS) whenever it
 > fails to resolve a beneficiary complaint (**NIP**) within **5 days**. Today an analyst manually
 > hunts, across dozens of a beneficiary's prior-authorization records (**VPPs**), for the one that
 > explains the denial — then writes the response by hand. This build **infers the correct VPP the
