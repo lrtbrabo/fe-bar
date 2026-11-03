@@ -19,25 +19,7 @@ tools, the prompts and the patterns, what went wrong, and where AI usage goes ne
 | **Playwright + headless Chromium** | The agent drove the app UI itself and checked for console errors. |
 | **Foundation Model API** (`databricks-gpt-6-sol`) | AI inside the product: the NIP → VPP matcher and the parecer draft. |
 
-## 2. The prompts that steered the build
-
-The author's prompts are short. The leverage comes from the context the agent could reach (the
-`instructions/` brief, the call transcript, memory files) and from the agent checking its own work.
-Condensed and translated from Portuguese, customer name removed:
-
-| Prompt | What it set in motion |
-|---|---|
-| "Look at the instructions folder and tell me what you understood. Don't build anything yet." | The rubric summarized and agreed on before any code. |
-| "Think NIP and VPP for health insurers. I discussed this exact use case with a customer yesterday; look at the Plaud recording and its transcript. Full flow." | The agent pulled the call through the Plaud MCP and turned it into business rules (pai/filha, 65-day window, status trap) kept in project memory. |
-| Four questions asked by the agent, answered by the author: existing workspace · AppKit (TS/React) · tool-using agent (deterministic retrieval + LLM) · train the ML model for real | Scope and architecture locked before building. |
-| "You can do everything without my supervision, go for it! Just commit everything to this repo." | Autonomous, phased build: one commit per layer, execution evidence committed as text. |
-| "Pick up where you left off. My workspace was deleted; the new profile is …" | The agent re-pointed every file and rebuilt all six layers on the new workspace from the repo. |
-| "The app is too simple … we need a monitoring dashboard with an integrated agent I can ask about the NIPs. Be more creative, but don't overcomplicate." | App v2: Painel, Fila, Radar and the embedded Genie agent. |
-| A screenshot of the app: "Invalid scope, required scopes: genie" | The agent found the missing OAuth scope and redeployed. |
-| "Build a Google Slides deck with our ideal storytelling for the FE Bar, following the visual pattern of this deck." | The deck generated as code on the reference visual system, with the demo script as speaker notes. |
-| "Give context on the problem before the results: not everyone in the room, nor the AI evaluator, has it." | Deck and demo script restructured context-first; saved as a standing rule in memory. |
-
-**Prompts inside the product**
+## 2. Prompts inside the product
 
 - **Matcher** ([`04_intelligence/agent/matcher.py`](04_intelligence/agent/matcher.py)): the business
   rules as a numbered list, an explicit "status is not a reliable signal" rule, and a strict JSON

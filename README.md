@@ -135,7 +135,7 @@ the agent built, tested and fixed.
 - **Human-gated.** Repo visibility, broad grants and sharing stay with the author; hooks are never
   bypassed.
 
-Tools, the steering prompts, the misses, and an **advanced-usage view** (a maturity ladder, and the
+Tools, the prompts inside the product, the misses, and an **advanced-usage view** (a maturity ladder, and the
 next level: evals as a merge gate, the analyst-feedback loop, parallel agents with review):
 [`AI_USAGE.md`](AI_USAGE.md).
 
