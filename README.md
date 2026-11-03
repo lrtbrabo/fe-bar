@@ -61,10 +61,10 @@ Analyst must find the matching VPP (prior-auth guide) among many, then write the
                                    │
   ┌────────────┐   ┌───────────────────────────┐   ┌─────────────────────────────┐
   │  LAKEFLOW  │──►│      UNITY CATALOG          │──►│  ML / GEN AI (intelligence) │
-  │ Auto Loader│   │ bronze→silver→gold          │   │ • NIP→VPP agent (tools)     │
-  │ CSV + JSONL│   │ masking · row filters ·     │   │   + parecer drafting        │
-  └────────────┘   │ lineage · grants (LGPD)     │   │ • ANS-rol lookup tool       │
-                   └───────────────────────────┘   │ • Vector Search match       │
+  │ Auto Loader│   │ bronze→silver→gold          │   │ • NIP→VPP matcher (SQL+LLM) │
+  │ CSV + JSONL│   │ masking · tags ·            │   │   + parecer drafting        │
+  └────────────┘   │ lineage · grants (LGPD)     │   │ • ANS-rol coverage check    │
+                   └───────────────────────────┘   │ • confidence gate           │
                                    │                 │ • NIP-propensity ML model   │
                                    ▼                 └─────────────────────────────┘
                         ┌────────────────────┐                    │
@@ -93,11 +93,12 @@ app, and Genie gives analysts a conversational window onto the same governed dat
 | `instructions/` | The FE Bar brief (reference). |
 | `01_synthetic_data/` | Deterministic synthetic-data generator + committed samples & summary. |
 | `02_lakeflow_pipeline/` | Lakeflow SDP (bronze→silver→gold) SQL transformations. |
-| `03_unity_catalog/` | Catalog/schema/volume setup + governance (masking, row filters, tags, grants). |
+| `03_unity_catalog/` | Catalog/schema/volume setup + governance (masking, tags, grants; row-filter function shipped, not applied). |
 | `04_intelligence/` | NIP→VPP agent (tool-using) + parecer drafting + NIP-propensity ML model. |
 | `05_lakebase/` | Lakebase operational serving (Postgres reverse-ETL loader + analyst write-back). |
 | `06_genie/` | Genie Space definition + NL query harness for analysts. |
 | `07_app/nip-vpp-copilot/` | Databricks App (AppKit / React): the NIP command center (Painel, Fila, Radar, Agente). |
+| `AI_USAGE.md` | How AI was used: tools, prompts, patterns, misses, and an advanced-usage view. |
 | `evidence/` | **Execution evidence as text** — run outputs, row counts, model metrics, matcher accuracy. |
 | `deck/` | Business presentation (PDF). |
 
@@ -115,6 +116,28 @@ app, and Genie gives analysts a conversational window onto the same governed dat
   Unity Catalog lineage/governance for regulated health PII.
 - **Synthetic data, on purpose hard** — the generator plants pai/filha, the status trap, ambiguity,
   and out-of-window distractors so the matcher is genuinely tested, with a ground-truth oracle.
+
+---
+
+## How AI was used (build teammate)
+
+One long-running Claude Code session: **12 author prompts → ~430 agent tool calls → 16 commits**.
+The author chose the problem, locked the four design decisions and kept every irreversible action;
+the agent built, tested and fixed.
+- **Discovery-grounded.** The business rules came from the real discovery call, read through the
+  Plaud MCP. Only the rules and synthetic data reach the repo.
+- **Eval-driven.** A ground-truth oracle scores the matcher per hard case. The first run (63.5%)
+  exposed a data bug, not a prompt bug; with the generator fixed it reached 96.6%.
+- **Everything as code.** When the workspace was deleted mid-build, the agent rebuilt all six layers
+  from the repo.
+- **Self-verifying.** App validation, a headless-browser run, live API checks, and palette and deck
+  validators.
+- **Human-gated.** Repo visibility, broad grants and sharing stay with the author; hooks are never
+  bypassed.
+
+Tools, the steering prompts, the misses, and an **advanced-usage view** (a maturity ladder, and the
+next level: evals as a merge gate, the analyst-feedback loop, parallel agents with review):
+[`AI_USAGE.md`](AI_USAGE.md).
 
 ---
 
@@ -171,5 +194,5 @@ ANS/TUSS terminology. The scenario is inspired by a real engagement but contains
 
 ---
 
-*Built as an FE Bar submission. AI was used as a build teammate (Claude Code); the design, decisions,
-and narrative are the author's own.*
+*Built as an FE Bar submission. AI was used as a build teammate (Claude Code, see
+[`AI_USAGE.md`](AI_USAGE.md)); the design, decisions, and narrative are the author's own.*
