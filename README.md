@@ -27,6 +27,11 @@ removes an ANS fine exposure (per-infraction penalties run in the tens of thousa
 are illustrative estimates on synthetic data, framed for the executive sponsor (cost/risk) and the
 domain owner (throughput/quality).
 
+**Cost vs. return** — running the platform costs **~R$ 16k/month** at list price for 2,000 NIPs a
+month, measured on the prototype's own billing and projected to production; the AI costs ~R$ 0.02
+per NIP. Avoiding **one overdue NIP every ~2 months** pays for it, and the R$ 3.2M backlog is ~16× a
+year of platform cost ([evidence/09](evidence/09_cost_model.md)).
+
 ---
 
 ## The domain in one picture
@@ -152,6 +157,7 @@ next level: evals as a merge gate, the analyst-feedback loop, parallel agents wi
 | Lakebase | Postgres `nip_vpp`: queue, guide explainability, rol check, timeline, radar + 2 write-back tables | [evidence/07](evidence/07_lakebase.md) |
 | Genie | space `Agente NIP`, with domain instructions; embedded in the app on behalf of the user | [evidence/06](evidence/06_genie.md) |
 | App | `nip-vpp-copilot` (RUNNING) | [evidence/08](evidence/08_app.md) |
+| Cost | measured consumption → ~R$ 16k/month in production, break-even at one avoided NIP every ~2 months | [evidence/09](evidence/09_cost_model.md) |
 
 Business deck (submission): [`deck/fe-bar-deck.pdf`](deck/fe-bar-deck.pdf), exported from Google Slides (generator in `deck/gslides/`, speaker notes = demo script) · Demo script: [`deck/roleplay-notes.md`](deck/roleplay-notes.md) · Markdown version: [`deck/nip-vpp-deck.pdf`](deck/nip-vpp-deck.pdf).
 

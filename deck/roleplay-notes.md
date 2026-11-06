@@ -96,6 +96,7 @@ Nem todo mundo na sala é de saúde suplementar: explique o jogo antes de mostra
 |---|---|
 | Quanto isso economiza? | Use o painel: 17 min por NIP × volume. Com ~2.000 NIPs/mês, ~560 horas de analista. A exposição a multa vem da premissa que **ela** acabou de ajustar. |
 | E se o agente errar? | Ele não decide sozinho: mostra a guia, o porquê, a checagem no rol e o analista aprova. Acertou **96,6%** das 208 NIPs no teste, e a confiança separa o que pode ir direto do que pede revisão. |
+| Quanto custa a plataforma? | Uns **R$ 16 mil por mês** a preço de lista para 2.000 NIPs/mês, medido no consumo real do protótipo (slide de custo, `evidence/09`). A IA custa **R$ 0,02 por NIP**; uma NIP vencida custa R$ 30 mil. Evitar **uma NIP a cada dois meses** paga a plataforma, e o backlog de R$ 3,2 mi é 16× um ano de custo. Não inclui o time de implantação do piloto. |
 | Em quanto tempo isso vira realidade? | O protótipo já roda ponta a ponta. O caminho é discovery das tabelas reais com a engenharia e um piloto de 4 semanas. Semanas, não trimestres. |
 | E o call center, muda o quê? | Ganha uma lista diária priorizada (o radar) com o motivo de cada caso e registra a ação. |
 
@@ -108,6 +109,7 @@ Nem todo mundo na sala é de saúde suplementar: explique o jogo antes de mostra
 | Por que Lakebase? | A fila precisa de leitura rápida e o app grava decisões (OLTP). O gold é copiado para Postgres no Lakebase; o app escreve parecer e ações de retenção de volta. |
 | O agente vê dado que o usuário não pode ver? | Não: o Genie roda **em nome do usuário** (escopos `genie` e `dashboards.genie`), então vale o masking do Unity Catalog. |
 | Integra com Salesforce? | Os analistas vivem no Salesforce: o conector nativo e bidirecional do Databricks leva o parecer de volta para lá. É o próximo passo do roadmap. |
+| O que pesa no custo e como reduzir? | O warehouse do Genie e do app, dimensionado para o horário comercial (~60% da conta). Tamanho menor ou auto-stop mais curto reduzem; o LLM é quase nada (US$ 0,76 nas 208 NIPs) e o Lakebase escala com a carga. |
 | Por que não ficar na POC em BigQuery? | O bloqueio era liberar a ferramenta para a área de negócio. Aqui o app e o Genie/Databricks One entregam isso sem expor a complexidade da plataforma. |
 
 ## Trocando de altitude

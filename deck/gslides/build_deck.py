@@ -185,7 +185,7 @@ class Slide:
 # ------------------------------------------------------------------------------------------
 # The storyline: context first (the domain in plain words, for anyone outside health insurance),
 # then the problem, the outcome tied to each pain, the solution (one move per screen), proof,
-# value, how it works, decisions, next step.
+# value, cost vs. return, next step. Architecture and trade-offs live in the README, not the deck.
 # ------------------------------------------------------------------------------------------
 def build_slides():
     S = []
@@ -309,7 +309,7 @@ def build_slides():
     s.source("Modelo de propensão registrado no Unity Catalog e servido em endpoint; pontuação em lote para o radar.")
 
     s = Slide("s13"); S.append((s, """Transição: "Isso funciona? Medimos." Saia da demo e volte para os slides."""))
-    s.divider("03  ·  RESULTADOS", "O que o protótipo", "já provou",
+    s.divider("03  ·  RESULTADOS", "O que o piloto", "já provou",
               "Números medidos contra um gabarito, com os casos difíceis plantados de propósito.")
 
     s = Slide("s14"); S.append((s, """Fale para a executiva primeiro (96,6% de acerto, 100% das abertas prontas) e depois desça para o técnico na linha de baixo: o acerto por tipo de caso difícil. Seja honesto sobre o ponto fraco: a guia antiga do mesmo tema (78,6%) é onde o piloto vai calibrar regras e o corte de confiança."""))
@@ -339,39 +339,35 @@ def build_slides():
     s.banner("Quanto vale para vocês?", "A premissa de multa é de vocês: o painel recalcula na hora.")
     s.source("Impacto ilustrativo: 2.000 NIPs por mês × 17 minutos economizados por NIP. Premissas editáveis no painel.")
 
-    s = Slide("s16"); S.append((s, """Transição para o técnico: "Como isso está construído." Mantenha a executiva na sala com uma frase: tudo numa plataforma só, sem costurar ferramentas."""))
-    s.divider("04  ·  COMO FUNCIONA", "Do dado bruto ao parecer,", "numa plataforma só",
-              "A arquitetura, as decisões e por que Databricks.")
+    s = Slide("s16"); S.append((s, """A resposta pronta para "quanto custa?". Para a executiva: "O custo não é chute: medi o consumo real do protótipo nas tabelas de billing e projetei para 2.000 NIPs por mês, a preço de lista. Dá uns R$ 16 mil por mês. A IA custa 2 centavos por NIP; uma NIP vencida custa R$ 30 mil. Evitar uma NIP a cada dois meses já paga a plataforma." Se o técnico perguntar o que pesa: o warehouse do Genie, dimensionado para o horário comercial; um tamanho menor reduz a conta. Se perguntarem da implantação: não entra aqui, é o piloto de 4 semanas, e mesmo somando o backlog paga muitas vezes."""))
+    s.header("Custo e retorno", "Uma NIP evitada a cada dois meses ", "paga a plataforma",
+             "Consumo medido no protótipo e projetado para 2.000 NIPs por mês, a preço de lista, sem descontos e sem o time de implantação.")
+    s.rect(0.6, 1.85, 5.75, 3.55)
+    s.text(0.9, 2.0, 5.15, 0.3, [[("CUSTO MENSAL DA PLATAFORMA", 9.5, LABEL, True)]])
+    y = 2.4
+    for item, val in [("Warehouse SQL do Genie e do app", "R$ 10,2 mil"), ("App do analista, sempre ligado", "R$ 1,9 mil"),
+                      ("Pipeline Lakeflow, a cada hora", "R$ 1,6 mil"), ("Genie", "R$ 1,4 mil"),
+                      ("Lakebase: fila, radar e decisões", "R$ 0,8 mil"), ("IA: LLM, modelo e storage", "R$ 0,2 mil")]:
+        s.text(0.9, y, 3.6, 0.32, [[(item, 11, BODY, False)]])
+        s.text(4.4, y, 1.65, 0.32, [[(val, 11, INK, True)]], align="END")
+        y += 0.34
+    s.rect(0.9, y + 0.06, 5.15, 0.015, fill=LINE, line=None)
+    s.text(0.9, y + 0.18, 3.6, 0.4, [[("Total por mês", 13, INK, True)]])
+    s.text(4.0, y + 0.18, 2.05, 0.4, [[("R$ 16 mil", 13, RED, True)]], align="END")
+    for i, (num, head, body) in enumerate([
+        ("16×", "Backlog vs. um ano de plataforma", "R$ 3,2 mi de exposição contra cerca de R$ 193 mil de plataforma por ano."),
+        ("R$ 0,02", "de IA por NIP analisada", "Contra R$ 30 mil de multa por NIP vencida. O LLM custou US$ 0,76 nas 208 NIPs."),
+        ("560 h", "de analista por mês, fora da conta", "O tempo devolvido ao time e as NIPs evitadas pelo radar não foram monetizados aqui."),
+    ]):
+        y = 1.85 + i * 1.235
+        s.rect(6.5, y, 6.25, 1.08)
+        s.text(6.75, y, 1.75, 1.08, [[(num, 22, GREEN, True)]], valign="MIDDLE")
+        s.text(8.55, y + 0.16, 4.0, 0.35, [[(head, 13, INK, True)]])
+        s.text(8.55, y + 0.52, 4.0, 0.5, [[(body, 10, BODY, False)]])
+    s.banner("Ponto de equilíbrio:", "evitar uma NIP vencida a cada dois meses. Mesmo com o triplo do custo, basta uma a cada três semanas.", y=5.75, h=0.7, size=12)
+    s.source("Medido em system.billing.usage do protótipo (evidence/09). Preço de lista AWS, câmbio de R$ 5,50 por US$, multa ilustrativa de R$ 30 mil por NIP vencida.")
 
-    s = Slide("s17"); S.append((s, """Leia a linha de cima como uma jornada: o dado entra pelo Lakeflow, é governado no Unity Catalog, a IA infere a guia e pontua o risco, o Lakebase serve a operação, o Genie responde e o app junta tudo. Depois, os três porquês. Se perguntarem da POC em BigQuery: o bloqueio era entregar para a área de negócio; aqui o app e o Genie entregam."""))
-    s.header("Arquitetura", "Seis camadas, ", "uma jornada integrada",
-             "O dado entra pelo Lakeflow, é governado no Unity Catalog e chega ao analista sem sair da plataforma.")
-    s.boxes(1.85, [("1", "Lakeflow", "ingestão com Auto Loader, bronze, silver e gold"), ("2", "Unity Catalog", "masking de CPF e nome, tags e linhagem"),
-                   ("3", "IA e ML", "agente NIP → VPP e modelo de propensão"), ("4", "Lakebase", "fila, radar e decisões em Postgres"),
-                   ("5", "Genie", "perguntas em português, em nome do usuário"), ("6", "App", "o centro de comando do analista")])
-    s.info_card(0.6, 3.55, 3.95, 1.85, "Um lugar só", "Sem costurar ferramentas",
-                "A POC atual parou na hora de liberar para a área de negócio. Aqui o app e o Genie entregam.")
-    s.info_card(4.7, 3.55, 3.95, 1.85, "Dado de saúde", "Governança de ponta a ponta",
-                "Masking, tags e linhagem do Unity Catalog valem no app, no Genie e no SQL.")
-    s.info_card(8.8, 3.55, 3.95, 1.85, "Onde o analista trabalha", "De volta ao Salesforce",
-                "O conector nativo e bidirecional leva o parecer ao Salesforce: próximo passo do roadmap.")
-    s.banner("Tudo versionado e reproduzível:", "pipeline em Asset Bundle, modelo registrado no Unity Catalog e app publicado com service principal.", size=12)
-
-    s = Slide("s18"); S.append((s, """Este slide é para o técnico e para a nota de "decisões e trade-offs". Uma frase por card: busca fixa mais LLM porque cada escolha precisa ser explicável; Lakebase porque a operação lê e grava em milissegundos; masking no lugar de filtro de linha porque o filtro esvaziava a fila. Feche com o OBO: o agente nunca vê mais do que o usuário."""))
-    s.header("Decisões e trade-offs", "Decisões que ", "priorizam o auditável",
-             "Em saúde regulada, cada escolha precisa ser explicada ao regulador e ao analista.")
-    s.card(0.6, 1.85, 3.95, 3.55, "Decisão 1", "Busca fixa e LLM, não um agente solto",
-           ["SQL determinístico acha as guias do beneficiário na janela", "O LLM ranqueia, aplica as regras e redige"],
-           "Cada escolha é explicável", hsize=14, bsize=11)
-    s.card(4.7, 1.85, 3.95, 3.55, "Decisão 2", "Lakebase para a operação",
-           ["Fila e radar em Postgres, com leitura em milissegundos", "Decisões do analista gravadas de volta"],
-           "O warehouse fica para a análise", hsize=14, bsize=11)
-    s.card(8.8, 1.85, 3.95, 3.55, "Decisão 3", "Masking em vez de filtro de linha",
-           ["O filtro regional esvaziava a fila de quem não é admin", "O masking protege o dado sem perder NIPs"],
-           "LGPD sem travar a operação", hsize=14, bsize=11)
-    s.banner("E o agente roda em nome de quem pergunta:", "o Genie nunca vê mais do que o usuário pode ver.")
-
-    s = Slide("s19"); S.append((s, """Feche com o pedido concreto. "O protótipo já roda ponta a ponta. O caminho é discovery das tabelas reais com a engenharia e um piloto de quatro semanas com um grupo de analistas, medindo tempo por NIP e NIPs dentro do prazo." Os três cards de cima são o que vem depois do piloto. Termine perguntando quem do time entraria no piloto."""))
+    s = Slide("s17"); S.append((s, """Feche com o pedido concreto. "O protótipo já roda ponta a ponta. O caminho é discovery das tabelas reais com a engenharia e um piloto de quatro semanas com um grupo de analistas, medindo tempo por NIP e NIPs dentro do prazo." Os três cards de cima são o que vem depois do piloto. Termine perguntando quem do time entraria no piloto."""))
     s.header("Próximo passo", "Do protótipo ao piloto ", "em quatro semanas",
              "O caminho que funciona: dado real, um grupo de analistas e métricas desde o primeiro dia.")
     s.info_card(0.6, 1.85, 3.95, 2.4, "Depois do piloto", "Fechar sozinho acima do corte",
